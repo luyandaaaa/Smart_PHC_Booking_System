@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import PatientRecords from './PatientRecords';
 import DocAppointmentView from './docAppointments';
+import ConsultationView from './ConsultationsView'
 
 const colors = {
   primary: '#3b82f6',
@@ -172,7 +173,6 @@ const DoctorDashboard = () => {
     { id: 'patients', label: 'Patient Records', icon: <Users size={20} /> },
     { id: 'appointments', label: 'Appointments', icon: <Calendar size={20} /> },
     { id: 'consultations', label: 'Consultations', icon: <Stethoscope size={20} /> },
-    { id: 'prescriptions', label: 'Prescriptions', icon: <Pill size={20} /> },
     { id: 'analytics', label: 'Analytics', icon: <TrendingUp size={20} /> },
     { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
     { id: 'emergency', label: 'Emergency', icon: <AlertTriangle size={20} /> },
@@ -539,6 +539,8 @@ const DoctorDashboard = () => {
     mainContent = <PatientRecords />;
   } else if (currentPage === 'appointments') {
     mainContent = <DocAppointmentView />;
+  } else if (currentPage === 'consultations') {
+    mainContent = <ConsultationView />;
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
