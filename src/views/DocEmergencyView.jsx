@@ -47,101 +47,103 @@ const colors = {
   yellow50: '#fffbeb',
 };
 
+// Mock data for emergency cases
+const emergencyCases = [
+  {
+    id: 1,
+    patient: 'Thabo Molefe',
+    age: 62,
+    gender: 'Male',
+    condition: 'Severe chest pain',
+    priority: 'critical',
+    time: '2 min ago',
+    location: 'Soweto, Johannesburg (2.3km away)',
+    vitals: {
+      bp: '180/110',
+      hr: '112',
+      temp: '37.2°C',
+      oxygen: '92%'
+    },
+    notes: [
+      { id: 1, text: 'Patient reports crushing chest pain radiating to left arm', time: '2 min ago', doctor: 'Dr. Khumalo' },
+      { id: 2, text: 'History of hypertension and high cholesterol', time: '1 min ago', doctor: 'System' }
+    ],
+    status: 'active'
+  },
+  {
+    id: 2,
+    patient: 'Sarah van der Merwe',
+    age: 34,
+    gender: 'Female',
+    condition: 'Severe allergic reaction',
+    priority: 'high',
+    time: '15 min ago',
+    location: 'Pretoria Central (5.1km away)',
+    vitals: {
+      bp: '90/60',
+      hr: '130',
+      temp: '38.1°C',
+      oxygen: '88%'
+    },
+    notes: [
+      { id: 1, text: 'Patient reports difficulty breathing after bee sting', time: '15 min ago', doctor: 'Dr. Khumalo' },
+      { id: 2, text: 'Known allergy to bee venom - carries EpiPen', time: '12 min ago', doctor: 'System' }
+    ],
+    status: 'active'
+  },
+  {
+    id: 3,
+    patient: 'Nomsa Mthembu',
+    age: 45,
+    gender: 'Female',
+    condition: 'Uncontrolled blood sugar',
+    priority: 'medium',
+    time: '32 min ago',
+    location: 'Alexandra (3.7km away)',
+    vitals: {
+      bp: '140/90',
+      hr: '98',
+      temp: '36.8°C',
+      oxygen: '96%'
+    },
+    notes: [
+      { id: 1, text: 'Blood glucose reading of 22 mmol/L', time: '32 min ago', doctor: 'Dr. Khumalo' },
+      { id: 2, text: 'Patient reports nausea and blurred vision', time: '28 min ago', doctor: 'System' }
+    ],
+    status: 'active'
+  },
+  {
+    id: 4,
+    patient: 'Pieter Johnson',
+    age: 58,
+    gender: 'Male',
+    condition: 'Severe headache',
+    priority: 'medium',
+    time: '1 hour ago',
+    location: 'Sandton (4.5km away)',
+    vitals: {
+      bp: '160/100',
+      hr: '88',
+      temp: '37.0°C',
+      oxygen: '97%'
+    },
+    notes: [
+      { id: 1, text: 'Sudden onset severe headache with photophobia', time: '1 hour ago', doctor: 'Dr. Khumalo' },
+      { id: 2, text: 'No history of migraines', time: '55 min ago', doctor: 'System' }
+    ],
+    status: 'resolved'
+  }
+];
+
 const DocEmergencyView = () => {
+  const [cases, setCases] = useState(emergencyCases);
   const [activeTab, setActiveTab] = useState('active');
   const [selectedCase, setSelectedCase] = useState(null);
   const [isNotificationsOn, setIsNotificationsOn] = useState(true);
   const [newNote, setNewNote] = useState('');
+  const [sortBy, setSortBy] = useState('time');
 
-  // Mock data for emergency cases
-  const emergencyCases = [
-    {
-      id: 1,
-      patient: 'Thabo Molefe',
-      age: 62,
-      gender: 'Male',
-      condition: 'Severe chest pain',
-      priority: 'critical',
-      time: '2 min ago',
-      location: 'Soweto, Johannesburg (2.3km away)',
-      vitals: {
-        bp: '180/110',
-        hr: '112',
-        temp: '37.2°C',
-        oxygen: '92%'
-      },
-      notes: [
-        { id: 1, text: 'Patient reports crushing chest pain radiating to left arm', time: '2 min ago', doctor: 'Dr. Khumalo' },
-        { id: 2, text: 'History of hypertension and high cholesterol', time: '1 min ago', doctor: 'System' }
-      ],
-      status: 'active'
-    },
-    {
-      id: 2,
-      patient: 'Sarah van der Merwe',
-      age: 34,
-      gender: 'Female',
-      condition: 'Severe allergic reaction',
-      priority: 'high',
-      time: '15 min ago',
-      location: 'Pretoria Central (5.1km away)',
-      vitals: {
-        bp: '90/60',
-        hr: '130',
-        temp: '38.1°C',
-        oxygen: '88%'
-      },
-      notes: [
-        { id: 1, text: 'Patient reports difficulty breathing after bee sting', time: '15 min ago', doctor: 'Dr. Khumalo' },
-        { id: 2, text: 'Known allergy to bee venom - carries EpiPen', time: '12 min ago', doctor: 'System' }
-      ],
-      status: 'active'
-    },
-    {
-      id: 3,
-      patient: 'Nomsa Mthembu',
-      age: 45,
-      gender: 'Female',
-      condition: 'Uncontrolled blood sugar',
-      priority: 'medium',
-      time: '32 min ago',
-      location: 'Alexandra (3.7km away)',
-      vitals: {
-        bp: '140/90',
-        hr: '98',
-        temp: '36.8°C',
-        oxygen: '96%'
-      },
-      notes: [
-        { id: 1, text: 'Blood glucose reading of 22 mmol/L', time: '32 min ago', doctor: 'Dr. Khumalo' },
-        { id: 2, text: 'Patient reports nausea and blurred vision', time: '28 min ago', doctor: 'System' }
-      ],
-      status: 'active'
-    },
-    {
-      id: 4,
-      patient: 'Pieter Johnson',
-      age: 58,
-      gender: 'Male',
-      condition: 'Severe headache',
-      priority: 'medium',
-      time: '1 hour ago',
-      location: 'Sandton (4.5km away)',
-      vitals: {
-        bp: '160/100',
-        hr: '88',
-        temp: '37.0°C',
-        oxygen: '97%'
-      },
-      notes: [
-        { id: 1, text: 'Sudden onset severe headache with photophobia', time: '1 hour ago', doctor: 'Dr. Khumalo' },
-        { id: 2, text: 'No history of migraines', time: '55 min ago', doctor: 'System' }
-      ],
-      status: 'resolved'
-    }
-  ];
-
-  const filteredCases = emergencyCases.filter(caseItem => {
+  const filteredCases = cases.filter(caseItem => {
     if (activeTab === 'active') return caseItem.status === 'active';
     if (activeTab === 'resolved') return caseItem.status === 'resolved';
     if (activeTab === 'all') return true;
@@ -164,6 +166,25 @@ const DocEmergencyView = () => {
       setNewNote('');
     }
   };
+
+  const handleResolveCase = (caseId) => {
+    setCases(prevCases => 
+      prevCases.map(c => 
+        c.id === caseId ? { ...c, status: 'resolved' } : c
+      )
+    );
+    if (selectedCase?.id === caseId) {
+      setSelectedCase({ ...selectedCase, status: 'resolved' });
+    }
+  };
+
+  const sortedCases = [...cases].sort((a, b) => {
+    if (sortBy === 'priority') {
+      const priorityOrder = { critical: 0, high: 1, medium: 2 };
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    }
+    return new Date(b.time) - new Date(a.time);
+  });
 
   const CaseCard = ({ caseItem }) => (
     <div
@@ -276,7 +297,7 @@ const DocEmergencyView = () => {
     </div>
   );
 
-  const CaseDetail = () => (
+  const CaseDetail = ({ case: caseItem, onAddNote, onResolve }) => (
     <div style={{
       background: colors.white,
       borderRadius: 12,
@@ -350,7 +371,7 @@ const DocEmergencyView = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
               <h2 style={{ fontSize: 24, fontWeight: 700, color: colors.gray800, marginBottom: 4 }}>
-                {selectedCase.patient}, {selectedCase.age}
+                {caseItem.patient}, {caseItem.age}
               </h2>
               <div style={{ 
                 fontSize: 14, 
@@ -359,25 +380,25 @@ const DocEmergencyView = () => {
                 alignItems: 'center',
                 gap: 16
               }}>
-                <span>{selectedCase.gender}</span>
-                <span>{selectedCase.condition}</span>
+                <span>{caseItem.gender}</span>
+                <span>{caseItem.condition}</span>
                 <span style={{
                   padding: '2px 8px',
                   borderRadius: 20,
-                  background: selectedCase.priority === 'critical' ? colors.red50 : 
-                              selectedCase.priority === 'high' ? colors.yellow50 : colors.blue50,
-                  color: selectedCase.priority === 'critical' ? colors.danger : 
-                         selectedCase.priority === 'high' ? colors.warning : colors.primary,
+                  background: caseItem.priority === 'critical' ? colors.red50 : 
+                              caseItem.priority === 'high' ? colors.yellow50 : colors.blue50,
+                  color: caseItem.priority === 'critical' ? colors.danger : 
+                         caseItem.priority === 'high' ? colors.warning : colors.primary,
                   fontSize: 12,
                   fontWeight: 600,
                   textTransform: 'uppercase'
                 }}>
-                  {selectedCase.priority} priority
+                  {caseItem.priority} priority
                 </span>
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: 14, color: colors.gray500 }}>{selectedCase.time}</div>
+              <div style={{ fontSize: 14, color: colors.gray500 }}>{caseItem.time}</div>
               <div style={{ 
                 fontSize: 14, 
                 color: colors.gray600,
@@ -387,7 +408,7 @@ const DocEmergencyView = () => {
                 marginTop: 4
               }}>
                 <MapPin size={14} />
-                {selectedCase.location}
+                {caseItem.location}
               </div>
             </div>
           </div>
@@ -422,9 +443,9 @@ const DocEmergencyView = () => {
                 <div style={{ 
                   fontSize: 16, 
                   fontWeight: 700, 
-                  color: selectedCase.vitals.bp.split('/')[0] > 140 ? colors.danger : colors.gray800 
+                  color: caseItem.vitals.bp.split('/')[0] > 140 ? colors.danger : colors.gray800 
                 }}>
-                  {selectedCase.vitals.bp}
+                  {caseItem.vitals.bp}
                 </div>
               </div>
               <div style={{ textAlign: 'center' }}>
@@ -445,9 +466,9 @@ const DocEmergencyView = () => {
                 <div style={{ 
                   fontSize: 16, 
                   fontWeight: 700, 
-                  color: selectedCase.vitals.hr > 100 ? colors.danger : colors.gray800 
+                  color: caseItem.vitals.hr > 100 ? colors.danger : colors.gray800 
                 }}>
-                  {selectedCase.vitals.hr} bpm
+                  {caseItem.vitals.hr} bpm
                 </div>
               </div>
               <div style={{ textAlign: 'center' }}>
@@ -468,9 +489,9 @@ const DocEmergencyView = () => {
                 <div style={{ 
                   fontSize: 16, 
                   fontWeight: 700, 
-                  color: parseFloat(selectedCase.vitals.temp) > 37.5 ? colors.warning : colors.gray800 
+                  color: parseFloat(caseItem.vitals.temp) > 37.5 ? colors.warning : colors.gray800 
                 }}>
-                  {selectedCase.vitals.temp}
+                  {caseItem.vitals.temp}
                 </div>
               </div>
               <div style={{ textAlign: 'center' }}>
@@ -491,9 +512,9 @@ const DocEmergencyView = () => {
                 <div style={{ 
                   fontSize: 16, 
                   fontWeight: 700, 
-                  color: parseInt(selectedCase.vitals.oxygen) < 94 ? colors.danger : colors.gray800 
+                  color: parseInt(caseItem.vitals.oxygen) < 94 ? colors.danger : colors.gray800 
                 }}>
-                  {selectedCase.vitals.oxygen}%
+                  {caseItem.vitals.oxygen}%
                 </div>
               </div>
             </div>
@@ -511,7 +532,7 @@ const DocEmergencyView = () => {
               border: `1px solid ${colors.gray200}`,
               marginBottom: 16
             }}>
-              {selectedCase.notes.map(note => (
+              {caseItem.notes.map(note => (
                 <div key={note.id} style={{ 
                   padding: '12px 0',
                   borderBottom: `1px solid ${colors.gray200}`,
@@ -626,19 +647,22 @@ const DocEmergencyView = () => {
             <MessageCircle size={16} />
             Message
           </button>
-          <button style={{
-            padding: '10px 20px',
-            borderRadius: 8,
-            border: 'none',
-            background: colors.success,
-            color: colors.white,
-            fontSize: 14,
-            fontWeight: 500,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
-          }}>
+          <button 
+            onClick={onResolve} 
+            style={{
+              padding: '10px 20px',
+              borderRadius: 8,
+              border: 'none',
+              background: colors.success,
+              color: colors.white,
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
+            }}
+          >
             <Check size={16} />
             Resolve Case
           </button>
@@ -753,57 +777,60 @@ const DocEmergencyView = () => {
         </button>
       </div>
 
-      {/* Main Content */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: selectedCase ? '1fr 2fr' : '1fr',
-        gap: 24
-      }}>
-        {/* Case List */}
-        <div style={{ 
-          background: colors.white,
-          borderRadius: 12,
-          border: `1px solid ${colors.gray200}`,
-          padding: 16,
-          overflowY: 'auto',
-          maxHeight: 'calc(100vh - 200px)'
-        }}>
-          {filteredCases.length > 0 ? (
-            filteredCases.map(caseItem => (
-              <CaseCard key={caseItem.id} caseItem={caseItem} />
-            ))
-          ) : (
-            <div style={{ 
-              padding: 40, 
-              textAlign: 'center',
-              color: colors.gray500
-            }}>
-              No {activeTab === 'active' ? 'active' : activeTab === 'resolved' ? 'resolved' : ''} emergency cases
-            </div>
-          )}
-        </div>
-
-        {/* Case Detail */}
-        {selectedCase ? (
-          <CaseDetail />
-        ) : (
+      {/* Case List */}
+      <div>
+        {sortedCases.length === 0 ? (
           <div style={{ 
             background: colors.white,
             borderRadius: 12,
             border: `1px solid ${colors.gray200}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 40
+            padding: 24,
+            textAlign: 'center',
+            color: colors.gray700,
+            fontSize: 16,
+            fontWeight: 500
           }}>
-            <div style={{ textAlign: 'center', color: colors.gray500 }}>
-              <AlertTriangle size={48} style={{ marginBottom: 16 }} />
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Select an emergency case</h3>
-              <p style={{ fontSize: 14 }}>Click on a case from the list to view details and take action</p>
-            </div>
+            No cases found.
           </div>
+        ) : (
+          filteredCases.map(caseItem => (
+            <CaseCard key={caseItem.id} caseItem={caseItem} />
+          ))
         )}
       </div>
+
+      {/* Case Detail (for selected case) */}
+      {selectedCase && (
+        <div style={{ 
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'rgba(0,0,0,0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{ 
+            background: colors.white,
+            borderRadius: 12,
+            border: `1px solid ${colors.gray200}`,
+            width: '90%',
+            maxWidth: 800,
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            padding: 0
+          }}>
+            <CaseDetail 
+              case={selectedCase} 
+              onAddNote={handleAddNote} 
+              onResolve={() => handleResolveCase(selectedCase.id)} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

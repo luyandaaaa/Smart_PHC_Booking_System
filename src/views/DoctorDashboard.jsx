@@ -31,6 +31,7 @@ import ConsultationView from './ConsultationsView'
 import AnalyticsView from './AnalyticsView';
 import MessagesView from './MessagesView';
 import DocEmergencyView from './DocEmergencyView';
+import Home from './Home';
 
 const colors = {
   primary: '#3b82f6',
@@ -179,6 +180,8 @@ const DoctorDashboard = () => {
     { id: 'analytics', label: 'Analytics', icon: <TrendingUp size={20} /> },
     { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
     { id: 'emergency', label: 'Emergency', icon: <AlertTriangle size={20} /> },
+    { id: 'logout', label: 'Logout', icon: <AlertTriangle size={20} /> },
+
   ];
 
   const isMobile = window.innerWidth < 768;

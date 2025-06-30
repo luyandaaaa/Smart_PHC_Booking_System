@@ -30,6 +30,7 @@ import {
   Volume2,
   Languages
 } from 'lucide-react';
+import { BrowserRouter } from 'react-router-dom';
 
 import DashboardView from './views/DashboardView';
 import AssistantView from './views/AssistantView';
@@ -318,164 +319,166 @@ const App = () => {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f9fafb'
-    }}>
-      {/* Header */}
-      <header style={{
-        backgroundColor: 'white',
-        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        borderBottom: '1px solid #e5e7eb',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50
+    <BrowserRouter>
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#f9fafb'
       }}>
+        {/* Header */}
+        <header style={{
+          backgroundColor: 'white',
+          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          borderBottom: '1px solid #e5e7eb',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50
+        }}>
+          <div style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '0 1rem',
+            height: '4rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                style={{
+                  display: 'none',
+                  padding: '0.5rem',
+                  borderRadius: '0.375rem',
+                  color: '#4b5563',
+                  backgroundColor: isMobileMenuOpen ? '#f3f4f6' : 'transparent'
+                }}
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.5rem' }}>
+                <Heart size={32} color="#ef4444" style={{ marginRight: '0.5rem' }} />
+                <div>
+                  <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>{t.title}</h1>
+                  <p style={{ fontSize: '0.75rem', color: '#6b7280', display: 'none' }}>{t.tagline}</p>
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <button 
+                onClick={toggleTranslationMode}
+                style={{
+                  padding: '0.5rem',
+                  borderRadius: '9999px',
+                  color: translationMode ? '#3b82f6' : '#4b5563',
+                  backgroundColor: translationMode ? '#dbeafe' : 'transparent'
+                }}
+              >
+                <Languages size={20} />
+              </button>
+              <button style={{
+                padding: '0.5rem',
+                borderRadius: '9999px',
+                color: '#4b5563',
+                backgroundColor: 'transparent'
+              }}>
+                <Bell size={20} />
+              </button>
+              <button style={{
+                padding: '0.5rem',
+                borderRadius: '9999px',
+                color: '#4b5563',
+                backgroundColor: 'transparent'
+              }}>
+                <Settings size={20} />
+              </button>
+              <div style={{
+                width: '2rem',
+                height: '2rem',
+                backgroundColor: '#3b82f6',
+                borderRadius: '9999px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <User size={16} color="white" />
+              </div>
+            </div>
+          </div>
+        </header>
+
         <div style={{
           maxWidth: '1280px',
           margin: '0 auto',
           padding: '0 1rem',
-          height: '4rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          paddingTop: '1.5rem',
+          paddingBottom: '1.5rem'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              style={{
-                display: 'none',
-                padding: '0.5rem',
-                borderRadius: '0.375rem',
-                color: '#4b5563',
-                backgroundColor: isMobileMenuOpen ? '#f3f4f6' : 'transparent'
-              }}
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.5rem' }}>
-              <Heart size={32} color="#ef4444" style={{ marginRight: '0.5rem' }} />
-              <div>
-                <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>{t.title}</h1>
-                <p style={{ fontSize: '0.75rem', color: '#6b7280', display: 'none' }}>{t.tagline}</p>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button 
-              onClick={toggleTranslationMode}
-              style={{
-                padding: '0.5rem',
-                borderRadius: '9999px',
-                color: translationMode ? '#3b82f6' : '#4b5563',
-                backgroundColor: translationMode ? '#dbeafe' : 'transparent'
-              }}
-            >
-              <Languages size={20} />
-            </button>
-            <button style={{
-              padding: '0.5rem',
-              borderRadius: '9999px',
-              color: '#4b5563',
-              backgroundColor: 'transparent'
-            }}>
-              <Bell size={20} />
-            </button>
-            <button style={{
-              padding: '0.5rem',
-              borderRadius: '9999px',
-              color: '#4b5563',
-              backgroundColor: 'transparent'
-            }}>
-              <Settings size={20} />
-            </button>
-            <div style={{
-              width: '2rem',
-              height: '2rem',
-              backgroundColor: '#3b82f6',
-              borderRadius: '9999px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <User size={16} color="white" />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div style={{
-        maxWidth: '1280px',
-        margin: '0 auto',
-        padding: '0 1rem',
-        paddingTop: '1.5rem',
-        paddingBottom: '1.5rem'
-      }}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.5rem'
-        }}>
-          {/* Sidebar Navigation */}
-          <nav style={{
-            display: isMobileMenuOpen ? 'block' : 'none',
-            width: '100%',
-            backgroundColor: 'white',
-            borderRadius: '0.75rem',
-            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            border: '1px solid #e5e7eb',
-            padding: '1rem'
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem'
           }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {navigationItems.map((item) => {
-                const IconComponent = eval(item.icon);
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setCurrentPage(item.id);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '0.5rem',
-                      textAlign: 'left',
-                      color: currentPage === item.id ? '#1d4ed8' : '#374151',
-                      backgroundColor: currentPage === item.id ? '#eff6ff' : 'transparent',
-                      border: currentPage === item.id ? '1px solid #bfdbfe' : '1px solid transparent'
-                    }}
-                  >
-                    <IconComponent size={20} />
-                    <span style={{ fontWeight: '500' }}>
-                      {translationMode ? translateMedicalTerms(t[item.label]) : t[item.label]}
-                    </span>
-                    {currentPage === item.id && <ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
+            {/* Sidebar Navigation */}
+            <nav style={{
+              display: isMobileMenuOpen ? 'block' : 'none',
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: '0.75rem',
+              boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+              border: '1px solid #e5e7eb',
+              padding: '1rem'
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {navigationItems.map((item) => {
+                  const IconComponent = eval(item.icon);
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setCurrentPage(item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem 1rem',
+                        borderRadius: '0.5rem',
+                        textAlign: 'left',
+                        color: currentPage === item.id ? '#1d4ed8' : '#374151',
+                        backgroundColor: currentPage === item.id ? '#eff6ff' : 'transparent',
+                        border: currentPage === item.id ? '1px solid #bfdbfe' : '1px solid transparent'
+                      }}
+                    >
+                      <IconComponent size={20} />
+                      <span style={{ fontWeight: '500' }}>
+                        {translationMode ? translateMedicalTerms(t[item.label]) : t[item.label]}
+                      </span>
+                      {currentPage === item.id && <ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
 
-          {/* Main Content */}
-          <main style={{ flex: 1 }}>
-            {renderCurrentView()}
-          </main>
+            {/* Main Content */}
+            <main style={{ flex: 1 }}>
+              {renderCurrentView()}
+            </main>
+          </div>
         </div>
-      </div>
 
-      {/* Game Modal */}
-      {currentGame && (
-        <GameModal 
-          game={currentGame} 
-          onClose={() => setCurrentGame(null)}
-          onComplete={handleGameComplete}
-        />
-      )}
-    </div>
+        {/* Game Modal */}
+        {currentGame && (
+          <GameModal 
+            game={currentGame} 
+            onClose={() => setCurrentGame(null)}
+            onComplete={handleGameComplete}
+          />
+        )}
+      </div>
+    </BrowserRouter>
   );
 };
 
