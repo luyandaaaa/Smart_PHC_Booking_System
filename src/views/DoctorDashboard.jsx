@@ -28,6 +28,8 @@ import {
 import PatientRecords from './PatientRecords';
 import DocAppointmentView from './docAppointments';
 import ConsultationView from './ConsultationsView'
+import AnalyticsView from './AnalyticsView';
+import MessagesView from './MessagesView';
 
 const colors = {
   primary: '#3b82f6',
@@ -541,6 +543,10 @@ const DoctorDashboard = () => {
     mainContent = <DocAppointmentView />;
   } else if (currentPage === 'consultations') {
     mainContent = <ConsultationView />;
+  } else if (currentPage === 'analytics') {
+    mainContent = <AnalyticsView />;
+  } else if (currentPage === 'messages') {
+    mainContent = <MessagesView />;
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
