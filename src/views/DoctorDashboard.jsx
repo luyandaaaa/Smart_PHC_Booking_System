@@ -30,6 +30,7 @@ import DocAppointmentView from './docAppointments';
 import ConsultationView from './ConsultationsView'
 import AnalyticsView from './AnalyticsView';
 import MessagesView from './MessagesView';
+import DocEmergencyView from './DocEmergencyView';
 
 const colors = {
   primary: '#3b82f6',
@@ -547,6 +548,8 @@ const DoctorDashboard = () => {
     mainContent = <AnalyticsView />;
   } else if (currentPage === 'messages') {
     mainContent = <MessagesView />;
+  } else if (currentPage === 'emergency') {
+    mainContent = <DocEmergencyView />;
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
