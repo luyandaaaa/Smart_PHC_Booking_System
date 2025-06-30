@@ -26,6 +26,7 @@ import {
   X
 } from 'lucide-react';
 import PatientRecords from './PatientRecords';
+import DocAppointmentView from './docAppointments';
 
 const colors = {
   primary: '#3b82f6',
@@ -536,6 +537,8 @@ const DoctorDashboard = () => {
   let mainContent = null;
   if (currentPage === 'patients') {
     mainContent = <PatientRecords />;
+  } else if (currentPage === 'appointments') {
+    mainContent = <DocAppointmentView />;
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
