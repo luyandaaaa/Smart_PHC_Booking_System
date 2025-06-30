@@ -26,10 +26,6 @@ import {
   X
 } from 'lucide-react';
 import PatientRecords from './PatientRecords';
-import ConsultationsView from './ConsultationsView';
-import PrescriptionsView from './PrescriptionsView';
-import AnalyticsView from './AnalyticsView';
-import AppointmentsView from './AppointmentsView';
 
 const colors = {
   primary: '#3b82f6',
@@ -540,14 +536,6 @@ const DoctorDashboard = () => {
   let mainContent = null;
   if (currentPage === 'patients') {
     mainContent = <PatientRecords />;
-  } else if (currentPage === 'appointments') {
-    mainContent = <AppointmentsView />;
-  } else if (currentPage === 'consultations') {
-    mainContent = <ConsultationsView />;
-  } else if (currentPage === 'prescriptions') {
-    mainContent = <PrescriptionsView />;
-  } else if (currentPage === 'analytics') {
-    mainContent = <AnalyticsView />;
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
@@ -577,9 +565,7 @@ const DoctorDashboard = () => {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: colors.gray50 }}>
-      <div style={{ width: isMobile ? 0 : 280, display: isMobile ? 'none' : 'block' }}>
-        <Sidebar />
-      </div>
+      <Sidebar />
       <MobileHeader />
       <div style={{ flex: 1, marginLeft: isMobile ? 0 : 280, marginTop: isMobile ? 64 : 0, padding: isMobile ? '1rem' : '2rem', maxWidth: 1400 }}>
         {mainContent}

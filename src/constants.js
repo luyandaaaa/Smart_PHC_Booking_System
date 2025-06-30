@@ -195,28 +195,3 @@ export const navigationItems = [
   { id: 'library', icon: 'BookOpen', label: 'library' },
   { id: 'rewards', icon: 'Award', label: 'rewards' }
 ];
-
-export const colors = {
-  primary: '#3b82f6',
-  primaryHover: '#2563eb',
-  secondary: '#f3f4f6',
-  danger: '#ef4444',
-  dangerHover: '#dc2626',
-  success: '#10b981',
-  warning: '#f59e0b',
-  gray50: '#f9fafb',
-  gray100: '#f3f4f6',
-  gray200: '#e5e7eb',
-  gray300: '#d1d5db',
-  gray400: '#9ca3af',
-  gray500: '#6b7280',
-  gray600: '#4b5563',
-  gray700: '#374151',
-  gray800: '#1f2937',
-  gray900: '#111827',
-  blue50: '#eff6ff',
-  green50: '#ecfdf5',
-  purple50: '#f5f3ff',
-  red50: '#fef2f2',
-  yellow50: '#fffbeb',
-};
