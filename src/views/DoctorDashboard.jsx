@@ -180,8 +180,6 @@ const DoctorDashboard = () => {
     { id: 'analytics', label: 'Analytics', icon: <TrendingUp size={20} /> },
     { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
     { id: 'emergency', label: 'Emergency', icon: <AlertTriangle size={20} /> },
-    { id: 'logout', label: 'Logout', icon: <AlertTriangle size={20} /> },
-
   ];
 
   const isMobile = window.innerWidth < 768;
@@ -556,7 +554,28 @@ const DoctorDashboard = () => {
   } else {
     mainContent = (
       <div style={{ padding: 24 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800 }}>Doctor Dashboard</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800 }}>Doctor Dashboard</h1>
+          <button
+            onClick={() => { window.location.href = '/'; }}
+            style={{
+              background: colors.primary,
+              color: 'white',
+              border: 'none',
+              borderRadius: 8,
+              padding: '10px 28px',
+              fontWeight: 600,
+              fontSize: 15,
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(59,130,246,0.08)',
+              transition: 'background 0.2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = colors.primaryHover}
+            onMouseLeave={e => e.currentTarget.style.background = colors.primary}
+          >
+            Logout
+          </button>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, margin: '32px 0' }}>
           {todayStats.map((stat, idx) => (
             <StatCard key={idx} stat={stat} />

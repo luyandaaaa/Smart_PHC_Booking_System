@@ -1,15 +1,8 @@
 import React from 'react';
 import { 
   Activity, 
-  BarChart2, 
-  LineChart, 
-  PieChart, 
   Users, 
-  Calendar, 
   Clock, 
-  Heart, 
-  Thermometer, 
-  Pill, 
   TrendingUp, 
   Download,
   Filter,
@@ -322,29 +315,6 @@ const AnalyticsView = () => {
           icon={<Clock size={18} />}
           bgColor={colors.green50}
         />
-      </div>
-
-      {/* Main Charts */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        gap: 24,
-        marginBottom: 24
-      }}>
-        <div>
-          <BarChart 
-            data={monthlyData.map(item => ({ ...item, value: item.consultations }))} 
-            title="Monthly Consultations"
-            height={300}
-          />
-        </div>
-        <div>
-          <BarChart 
-            data={ageDistribution} 
-            title="Patient Age Distribution"
-            height={300}
-          />
-        </div>
       </div>
 
       {/* Secondary Charts */}

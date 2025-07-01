@@ -320,6 +320,34 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
     </div>
   );
 
+  // --- LOGOUT BUTTON ---
+  const handleLogout = () => {
+    window.location.href = '/';
+  };
+
+  const logoutButton = (
+    <button
+      onClick={handleLogout}
+      style={{
+        background: colors.primary,
+        color: '#fff',
+        border: 'none',
+        borderRadius: 8,
+        padding: '10px 22px',
+        fontWeight: 600,
+        fontSize: 15,
+        cursor: 'pointer',
+        boxShadow: '0 1px 2px 0 rgba(59,130,246,0.10)',
+        transition: 'background 0.2s',
+        marginLeft: 16,
+      }}
+      onMouseOver={e => e.currentTarget.style.background = colors.primaryHover}
+      onMouseOut={e => e.currentTarget.style.background = colors.primary}
+    >
+      Logout
+    </button>
+  );
+
   // Welcome header
   const welcomeHeader = (
     <div style={{
@@ -364,6 +392,7 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
             <option>Afrikaans</option>
             <option>Sesotho</option>
           </select>
+          {logoutButton}
         </div>
       </div>
     </div>
