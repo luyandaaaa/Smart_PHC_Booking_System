@@ -1,36 +1,7 @@
 // App.jsx
 import React, { useState, useEffect } from 'react';
-import { 
-  Heart, 
-  MessageCircle, 
-  Calendar, 
-  Camera, 
-  AlertTriangle, 
-  Brain, 
-  Users, 
-  Award, 
-  BookOpen, 
-  BarChart3,
-  Mic,
-  MicOff,
-  MapPin,
-  Clock,
-  Pill,
-  Star,
-  Phone,
-  Menu,
-  X,
-  ChevronRight,
-  Home as HomeIcon,
-  User,
-  Settings,
-  Bell,
-  Zap,
-  Globe,
-  Volume2,
-  Languages
-} from 'lucide-react';
 import { BrowserRouter } from 'react-router-dom';
+import { iconComponents, translations, languages, navigationItems, medicalTerms, games, unlockedBadges } from './constants';
 
 import DashboardView from './views/DashboardView';
 import AssistantView from './views/AssistantView';
@@ -44,7 +15,6 @@ import Home from './views/Home';
 import ScanView from './views/ScanView';
 import ProfileView from './views/ProfileView';
 import AnalyticsView from './views/AnalyticsView';
-import { translations, languages, navigationItems, medicalTerms, games, unlockedBadges } from './constants';
 import GameModal from './components/GameModal';
 
 const App = () => {
@@ -91,7 +61,6 @@ const App = () => {
       setIsPlayingAudio(false);
       setAudioQueue([]);
     } else {
-      // Get all text content from the current view
       let summaryText = '';
       const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span:not([aria-hidden="true"])');
       elements.forEach(el => {
@@ -106,13 +75,11 @@ const App = () => {
   const toggleVoice = () => {
     setIsListening(!isListening);
     if (!isListening) {
-      // Start voice recognition
       if ('webkitSpeechRecognition' in window) {
         const recognition = new window.webkitSpeechRecognition();
         recognition.lang = currentLanguage;
         recognition.onresult = (event) => {
           const transcript = event.results[0][0].transcript;
-          // Process the voice command
           handleVoiceCommand(transcript);
         };
         recognition.start();
@@ -124,7 +91,6 @@ const App = () => {
 
   const handleVoiceCommand = (command) => {
     const lowerCommand = command.toLowerCase();
-    // Navigation commands
     if (lowerCommand.includes('dashboard')) {
       setCurrentPage('dashboard');
     } else if (lowerCommand.includes('assistant') || lowerCommand.includes('help')) {
@@ -171,7 +137,6 @@ const App = () => {
   const toggleTranslationMode = () => {
     setTranslationMode(!translationMode);
     if (!translationMode) {
-      // Initialize medical term translation for the current language
       const terms = Object.keys(medicalTerms.en);
       const translatedTerms = {};
       terms.forEach(term => {
@@ -183,9 +148,7 @@ const App = () => {
 
   const translateMedicalTerms = (text) => {
     if (!translationMode) return text;
-    // Split the text into words and punctuation
     const words = text.split(/(\s+|\W+)/);
-    // Translate each word if it's a medical term
     return words.map(word => {
       const lowerWord = word.toLowerCase();
       if (medicalTermTranslation[lowerWord]) {
@@ -195,7 +158,6 @@ const App = () => {
     }).join('');
   };
 
-  // Add mock data for appointments, clinics, emergencies, and supports
   const mockAppointments = [
     {
       clinic: 'General Checkup',
@@ -254,6 +216,7 @@ const App = () => {
       setCurrentPage,
       setCurrentLanguage
     };
+    
     switch (currentPage) {
       case 'dashboard':
         return <DashboardView {...commonProps} currentPage={currentPage} setCurrentPage={setCurrentPage} />;
@@ -320,10 +283,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#f9fafb'
-      }}>
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
         {/* Header */}
         <header style={{
           backgroundColor: 'white',
@@ -353,10 +313,13 @@ const App = () => {
                   backgroundColor: isMobileMenuOpen ? '#f3f4f6' : 'transparent'
                 }}
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {isMobileMenuOpen ? 
+                  <iconComponents.X size={24} /> : 
+                  <iconComponents.Menu size={24} />
+                }
               </button>
               <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.5rem' }}>
-                <Heart size={32} color="#ef4444" style={{ marginRight: '0.5rem' }} />
+                <iconComponents.Heart size={32} color="#ef4444" style={{ marginRight: '0.5rem' }} />
                 <div>
                   <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>{t.title}</h1>
                   <p style={{ fontSize: '0.75rem', color: '#6b7280', display: 'none' }}>{t.tagline}</p>
@@ -373,7 +336,7 @@ const App = () => {
                   backgroundColor: translationMode ? '#dbeafe' : 'transparent'
                 }}
               >
-                <Languages size={20} />
+                <iconComponents.Languages size={20} />
               </button>
               <button style={{
                 padding: '0.5rem',
@@ -381,7 +344,7 @@ const App = () => {
                 color: '#4b5563',
                 backgroundColor: 'transparent'
               }}>
-                <Bell size={20} />
+                <iconComponents.Bell size={20} />
               </button>
               <button style={{
                 padding: '0.5rem',
@@ -389,7 +352,7 @@ const App = () => {
                 color: '#4b5563',
                 backgroundColor: 'transparent'
               }}>
-                <Settings size={20} />
+                <iconComponents.Settings size={20} />
               </button>
               <div style={{
                 width: '2rem',
@@ -400,7 +363,7 @@ const App = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <User size={16} color="white" />
+                <iconComponents.User size={16} color="white" />
               </div>
             </div>
           </div>
@@ -430,7 +393,7 @@ const App = () => {
             }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {navigationItems.map((item) => {
-                  const IconComponent = eval(item.icon);
+                  const IconComponent = iconComponents[item.icon];
                   return (
                     <button
                       key={item.id}
@@ -455,7 +418,7 @@ const App = () => {
                       <span style={{ fontWeight: '500' }}>
                         {translationMode ? translateMedicalTerms(t[item.label]) : t[item.label]}
                       </span>
-                      {currentPage === item.id && <ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
+                      {currentPage === item.id && <iconComponents.ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
                     </button>
                   );
                 })}

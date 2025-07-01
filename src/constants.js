@@ -1,5 +1,35 @@
 // constants.js
-// Add your constants here
+import { 
+  Home as HomeIcon,
+  MessageCircle,
+  Calendar,
+  AlertTriangle,
+  Heart,
+  Users,
+  BookOpen,
+  Award,
+  BarChart3,
+  Brain,
+  Camera,
+  Mic,
+  MicOff,
+  MapPin,
+  Clock,
+  Pill,
+  Star,
+  Phone,
+  Menu,
+  X,
+  ChevronRight,
+  User,
+  Settings,
+  Bell,
+  Zap,
+  Globe,
+  Volume2,
+  Languages
+} from 'lucide-react';
+
 export const APP_NAME = 'ChatGPT4Health';
 
 export const languages = {
@@ -185,13 +215,44 @@ export const unlockedBadges = [
   { id: 6, name: 'Mental Wellness', icon: '🧠', description: 'Complete mental health activities for 14 days', unlocked: false }
 ];
 
+export const iconComponents = {
+  Home: HomeIcon,
+  MessageCircle,
+  Calendar,
+  AlertTriangle,
+  Heart,
+  Users,
+  BookOpen,
+  Award,
+  BarChart3,
+  Brain,
+  Camera,
+  Mic,
+  MicOff,
+  MapPin,
+  Clock,
+  Pill,
+  Star,
+  Phone,
+  Menu,
+  X,
+  ChevronRight,
+  User,
+  Settings,
+  Bell,
+  Zap,
+  Globe,
+  Volume2,
+  Languages
+};
+
 export const navigationItems = [
-  { id: 'dashboard', icon: 'Home', label: 'dashboard' },
-  { id: 'assistant', icon: 'MessageCircle', label: 'assistant' },
-  { id: 'appointments', icon: 'Calendar', label: 'appointments' },
-  { id: 'emergency', icon: 'AlertTriangle', label: 'emergency' },
-  { id: 'mental-health', icon: 'Brain', label: 'mentalHealth' },
-  { id: 'community', icon: 'Users', label: 'community' },
-  { id: 'library', icon: 'BookOpen', label: 'library' },
-  { id: 'rewards', icon: 'Award', label: 'rewards' }
+  { id: 'dashboard', label: 'dashboard', icon: 'Home' },
+  { id: 'assistant', label: 'assistant', icon: 'MessageCircle' },
+  { id: 'appointments', label: 'appointments', icon: 'Calendar' },
+  { id: 'emergency', label: 'emergency', icon: 'AlertTriangle' },
+  { id: 'mental-health', label: 'mentalHealth', icon: 'Brain' },
+  { id: 'community', label: 'community', icon: 'Users' },
+  { id: 'library', label: 'library', icon: 'BookOpen' },
+  { id: 'rewards', label: 'rewards', icon: 'Award' }
 ];
