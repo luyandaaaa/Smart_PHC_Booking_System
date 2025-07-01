@@ -153,7 +153,99 @@ const styles = `
 `;
 
 const ussdMenus = {
-  // ... (keep all USSD menu definitions exactly the same)
+  main: {
+    text: `Welcome to HealthGPT SA\n1. Book Clinic\n2. Med Reminders\n3. Health Tips\n4. Emergency\n0. Exit`,
+    options: {
+      '1': (session) => { session.currentMenu = 'clinics'; return ussdMenus.clinics.text; },
+      '2': (session) => { session.currentMenu = 'medication_name'; return 'Enter med name:'; },
+      '3': (session) => { session.currentMenu = 'health_tips'; return ussdMenus.health_tips.text; },
+      '4': (session) => { session.currentMenu = 'emergency'; return ussdMenus.emergency.text; },
+      '0': () => 'Thank you!\nGoodbye!'
+    }
+  },
+  clinics: {
+    text: `Select clinic:\n1. Soweto TB Clinic\n2. Joburg Central\n3. Maternity\n4. Katlong Clinic\n5. Back`,
+    options: {
+      '1': (session) => { session.appointment.clinic = 'Soweto TB Clinic'; session.currentMenu = 'appointment_date'; return 'Enter date (DDMMYYYY):'; },
+      '2': (session) => { session.appointment.clinic = 'Joburg Central'; session.currentMenu = 'appointment_date'; return 'Enter date (DDMMYYYY):'; },
+      '3': (session) => { session.appointment.clinic = 'Maternity'; session.currentMenu = 'appointment_date'; return 'Enter date (DDMMYYYY):'; },
+      '4': (session) => { session.appointment.clinic = 'Katlong Clinic'; session.currentMenu = 'appointment_date'; return 'Enter date (DDMMYYYY):'; },
+      '5': (session) => { session.currentMenu = 'main'; return ussdMenus.main.text; }
+    }
+  },
+  appointment_date: {
+    handler: (input, session) => {
+      if (/^\d{8}$/.test(input)) {
+        session.appointment.date = input;
+        session.currentMenu = 'appointment_time';
+        return 'Enter time (HHMM):';
+      } else {
+        return 'Invalid format!\nUse DDMMYYYY';
+      }
+    }
+  },
+  appointment_time: {
+    handler: (input, session) => {
+      if (/^\d{4}$/.test(input)) {
+        session.appointment.time = input;
+        session.currentMenu = 'appointment_confirm';
+        return `Confirm:\n${session.appointment.clinic}\nDate: ${session.appointment.date}\nTime: ${session.appointment.time}\n1. Confirm\n2. Cancel`;
+      } else {
+        return 'Invalid format!\nUse HHMM';
+      }
+    }
+  },
+  appointment_confirm: {
+    options: {
+      '1': (session) => {
+        const response = `Confirmed!\n${session.appointment.clinic}\n${session.appointment.date} ${session.appointment.time}`;
+        resetSession(session);
+        return response;
+      },
+      '2': (session) => {
+        resetSession(session);
+        return ussdMenus.main.text;
+      }
+    }
+  },
+  medication_name: {
+    handler: (input, session) => {
+      session.medication.name = input;
+      session.currentMenu = 'medication_dosage';
+      return 'Enter dosage:';
+    }
+  },
+  medication_dosage: {
+    handler: (input, session) => {
+      session.medication.dosage = input;
+      session.currentMenu = 'medication_time';
+      return 'Enter time (HHMM):';
+    }
+  },
+  medication_time: {
+    handler: (input, session) => {
+      if (/^\d{4}$/.test(input)) {
+        session.medication.time = input;
+        const response = `Reminder set:\n${session.medication.name}\n${session.medication.dosage} at ${session.medication.time}`;
+        resetSession(session);
+        return response;
+      } else {
+        return 'Invalid format!\nUse HHMM';
+      }
+    }
+  },
+  health_tips: {
+    text: `Health Tips:\n1. TB Treatment\n2. HIV Care\n3. Maternal\n4. Back`,
+    options: {
+      '1': () => 'TB Treatment:\nTake meds daily\nfor 6 months',
+      '2': () => 'HIV Care:\nTake ARVs daily\nRegular tests',
+      '3': () => 'Maternal:\nPrenatal visits\nTake supplements',
+      '4': (session) => { session.currentMenu = 'main'; return ussdMenus.main.text; }
+    }
+  },
+  emergency: {
+    text: 'Emergency:\nAmbulance:10177\nPolice:10111\nAIDS:0800012322'
+  }
 };
 
 function resetSession(session) {
