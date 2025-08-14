@@ -1,8 +1,8 @@
-# 🏥 HealthGPT SA - AI-Powered Healthcare Platform
+# 🏥 MzansiCare - AI-Powered Healthcare Platform
 
 **A revolutionary AI-powered healthcare platform designed to make healthcare accessible, personalized, and engaging for South Africans.**
 
-![HealthGPT SA Banner](public/dashboard.png)
+![MzansiCare Banner](public/dashboard.png)
 
 ## 🌟 Features
 

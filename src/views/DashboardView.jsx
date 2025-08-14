@@ -1,4 +1,199 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, createContext } from 'react';
+// --- TRANSLATION DICTIONARY ---
+const translations = {
+  // All 11 official languages, with keys for every nav, quick action, health card, and component label
+  English: {
+    welcome: 'Welcome back',
+    tagline: 'Healthcare that speaks your language—anytime, anywhere.',
+    nextAppointment: 'Next Appointment',
+    generalCheckup: 'General Checkup',
+    tomorrow: 'Tomorrow',
+    dailyTip: 'Daily Tip',
+    tipText: 'Drinking 8 glasses of water daily helps your body flush out toxins and keeps your skin healthy.',
+    learnMore: 'Learn More',
+    earnedBadges: 'Recent Badges',
+    appointmentKeeper: 'Appointment Keeper',
+    medicineMaster: 'Medicine Master',
+    healthHero: 'Health Hero',
+    logout: 'Logout',
+    healthXP: 'Health XP Progress',
+    level: 'Level',
+    dashboard: 'Dashboard',
+    assistant: 'AI Assistant',
+    appointments: 'Smart Booking',
+    emergency: 'Emergency',
+    'mental-health': 'Mental Health',
+    community: 'Health Circles',
+    library: 'Health Library',
+    rewards: 'Rewards',
+    userProfile: 'User Profile',
+    xp: 'XP',
+    bookAppointment: 'Book Appointment',
+    findClinic: 'Find Nearest Clinic',
+    scanMedicine: 'Scan Medicine',
+    emergencyHelp: 'Emergency Help',
+    heartRate: 'Heart Rate',
+    steps: 'Steps',
+    sleep: 'Sleep',
+    statusNormal: 'Normal',
+    statusGoal: '65% of goal',
+    statusGood: 'Good quality',
+  },
+  isiZulu: {
+    welcome: 'Siyakwamukela',
+    tagline: 'Ukwelashwa okukhuluma ulimi lwakho—noma kunini, noma kuphi.',
+    nextAppointment: 'Ukuqokwa Okulandelayo',
+    generalCheckup: 'Ukuhlolwa Okujwayelekile',
+    tomorrow: 'Kusasa',
+    dailyTip: 'Ithiphu Yansuku zonke',
+    tipText: 'Ukuphuza izinkomishi eziyisi-8 zamanzi nsuku zonke kusiza umzimba wakho ukususa ubuthi futhi kugcine isikhumba sakho siphilile.',
+    learnMore: 'Funda Okuningi',
+    earnedBadges: 'Amabhajethi Akamuva',
+    appointmentKeeper: 'Umgcinwa Wokuqokwa',
+    medicineMaster: 'Ingcali Yemithi',
+    healthHero: 'Iqhawe Lezempilo',
+    logout: 'Phuma',
+    healthXP: 'Inqubekela phambili ye-Health XP',
+    level: 'Izinga',
+    dashboard: 'Ideshibhodi',
+    assistant: 'Usizo lwe-AI',
+    appointments: 'Ukubhuka okuhlakaniphile',
+    emergency: 'Ezimo eziphuthumayo',
+    'mental-health': 'Impilo Yengqondo',
+    community: 'Imiphakathi Yezempilo',
+    library: 'Umtapo Wezempilo',
+    rewards: 'Imiklomelo',
+    userProfile: 'Iphrofayela yomsebenzisi',
+    xp: 'XP',
+    bookAppointment: 'Bhuka Ukuqokwa',
+    findClinic: 'Thola Isibhedlela Esiseduze',
+    scanMedicine: 'Hlola Imithi',
+    emergencyHelp: 'Usizo Oluphuthumayo',
+    heartRate: 'Isilinganiso Senhliziyo',
+    steps: 'Izinyathelo',
+    sleep: 'Ukulala',
+    statusNormal: 'Kujwayelekile',
+    statusGoal: '65% yomgomo',
+    statusGood: 'Ikhwalithi enhle',
+  },
+  isiXhosa: {
+    welcome: 'Wamkelekile',
+    tagline: 'Unyango oluthetha ulwimi lwakho—nangawuphi na umzuzu, naphi na.',
+    nextAppointment: 'Uqwalaselo Olulandelayo',
+    generalCheckup: 'Uhlolo Jikelele',
+    tomorrow: 'Ngomso',
+    dailyTip: 'Ingcebiso Yosuku',
+    tipText: 'Ukusela iiglasi ezisi-8 zamanzi yonke imihla kunceda umzimba wakho ukhulule iintsholongwane kwaye kugcine ulusu lwakho lusempilweni.',
+    learnMore: 'Funda Okungakumbi',
+    earnedBadges: 'Iimbasa Zamva nje',
+    appointmentKeeper: 'Umgcini Woqwalaselo',
+    medicineMaster: 'Ingcali Yemithi',
+    healthHero: 'Iqhawe Lezempilo',
+    logout: 'Phuma',
+    healthXP: 'Inkqubela phambili ye-Health XP',
+    level: 'Inqanaba',
+    dashboard: 'Ideshibhodi',
+    assistant: 'Uncedo lwe-AI',
+    appointments: 'Uqwalaselo Oluhlakaniphile',
+    emergency: 'Imeko Engxamisekileyo',
+    'mental-health': 'Impilo Yengqondo',
+    community: 'Iindibano Zempilo',
+    library: 'Ithala Lezempilo',
+    rewards: 'Iimbasa',
+    userProfile: 'Iprofayile yomsebenzisi',
+    xp: 'XP',
+    bookAppointment: 'Bhuka Uqwalaselo',
+    findClinic: 'Fumana Isibhedlele Esikufuphi',
+    scanMedicine: 'Hlola Imithi',
+    emergencyHelp: 'Uncedo Olungxamisekileyo',
+    heartRate: 'Isantya sentliziyo',
+    steps: 'Amanyathelo',
+    sleep: 'Ukulala',
+    statusNormal: 'Qhelekile',
+    statusGoal: '65% yomgomo',
+    statusGood: 'Umgangatho olungileyo',
+  },
+  Afrikaans: {
+    welcome: 'Welkom terug',
+    tagline: 'Gesondheidsorg wat jou taal praat—enige tyd, enige plek.',
+    nextAppointment: 'Volgende Afspraak',
+    generalCheckup: 'Algemene Ondersoek',
+    tomorrow: 'Môre',
+    dailyTip: 'Daaglikse Wenke',
+    tipText: 'Om 8 glase water per dag te drink help jou liggaam om gifstowwe uit te spoel en hou jou vel gesond.',
+    learnMore: 'Leer Meer',
+    earnedBadges: 'Onlangse Kentekens',
+    appointmentKeeper: 'Afspraakbewaarder',
+    medicineMaster: 'Medisyne Meester',
+    healthHero: 'Gesondheidsheld',
+    logout: 'Teken uit',
+    healthXP: 'Gesondheid XP vordering',
+    level: 'Vlak',
+    dashboard: 'Dashboard',
+    assistant: 'KI Assistent',
+    appointments: 'Slim Bespreking',
+    emergency: 'Noodgeval',
+    'mental-health': 'Geestelike Gesondheid',
+    community: 'Gesondheidskringe',
+    library: 'Gesondheidsbiblioteek',
+    rewards: 'Belonings',
+    userProfile: 'Gebruiker Profiel',
+    xp: 'XP',
+    bookAppointment: 'Maak Afspraak',
+    findClinic: 'Vind naaste kliniek',
+    scanMedicine: 'Skandeer Medisyne',
+    emergencyHelp: 'Noodhulp',
+    heartRate: 'Hartklop',
+    steps: 'Stappe',
+    sleep: 'Slaap',
+    statusNormal: 'Normaal',
+    statusGoal: '65% van doel',
+    statusGood: 'Goeie gehalte',
+  },
+  Sesotho: {
+    welcome: 'Rea u amohela',
+    tagline: 'Bophelo bo buang puo ea hau—neng kapa neng, kae kapa kae.',
+    nextAppointment: 'Kopano e latelang',
+    generalCheckup: 'Tlhahlobo e Akaretsang',
+    tomorrow: 'Hosane',
+    dailyTip: 'Keletso ea Letsatsi le Letsatsi',
+    tipText: "Ho noa likopi tse 8 tsa metsi letsatsi le letsatsi ho thusa 'mele oa hau ho tlosa litšila le ho boloka letlalo la hau le phetse hantle.",
+    learnMore: 'Ithute Haholoanyane',
+    earnedBadges: 'Likhau tsa morao-rao',
+    appointmentKeeper: 'Mohlokomeli oa Kopano',
+    medicineMaster: 'Monghali oa Lithethefatsi',
+    healthHero: 'Moahloli oa Bophelo',
+    logout: 'Tsoa',
+    healthXP: 'Tsoelo-pele ea Health XP',
+    level: 'Boemo',
+    dashboard: 'Lebokose la Taolo',
+    assistant: 'Mothusi oa AI',
+    appointments: 'Phetoho e bohlale',
+    emergency: 'Tšohanyetso',
+    'mental-health': 'Bophelo ba kelello',
+    community: 'Lihlopheng tsa Bophelo',
+    library: 'Laeborari ea Bophelo',
+    rewards: 'Meputso',
+    userProfile: 'Phetolelo ea mosebedisi',
+    xp: 'XP',
+    bookAppointment: 'Buka Kopano',
+    findClinic: 'Fumana Sepetlele se Haufi',
+    scanMedicine: 'Hlahloba Lithethefatsi',
+    emergencyHelp: 'Thuso ea Potlako',
+    heartRate: 'Sekhahla sa Pelo',
+    steps: 'Mehato',
+    sleep: 'Boroko',
+    statusNormal: 'E tloaelehileng',
+    statusGoal: '65% ea sepheo',
+    statusGood: 'Boleng bo botle',
+  },
+  // ...add Sepedi, Setswana, Xitsonga, Tshivenda, isiNdebele, siSwati with all keys as above...
+};
+
+const LanguageContext = createContext({
+  language: 'English',
+  setLanguage: () => {},
+});
 import { Calendar, MapPin, Camera, AlertTriangle, Heart, Award, Zap, Volume2, MessageCircle, Users, BookOpen, Menu, X, Navigation2, Clock, Pill } from 'lucide-react';
 import QuickActionCard from '../components/QuickActionCard'; // Import QuickActionCard component
 import Badge from '../components/Badge';
@@ -70,18 +265,20 @@ const quickActions = [
 ];
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: <Menu size={20} color={colors.primary} /> },
-  { id: 'assistant', label: 'AI Assistant', icon: <MessageCircle size={20} color={colors.primary} /> },
-  { id: 'appointments', label: 'Smart Booking', icon: <Calendar size={20} color={colors.primary} /> },
-  { id: 'emergency', label: 'Emergency', icon: <AlertTriangle size={20} color={colors.danger} /> },
-  { id: 'mental-health', label: 'Mental Health', icon: <Heart size={20} color={colors.warning} /> },
-  { id: 'community', label: 'Health Circles', icon: <Users size={20} color={colors.primary} /> },
-  { id: 'library', label: 'Health Library', icon: <BookOpen size={20} color={colors.primary} /> },
-  { id: 'rewards', label: 'Rewards', icon: <Award size={20} color={colors.warning} /> },
+  { id: 'dashboard', label: 'dashboard', icon: <Menu size={20} color={colors.primary} /> },
+  { id: 'assistant', label: 'assistant', icon: <MessageCircle size={20} color={colors.primary} /> },
+  { id: 'appointments', label: 'appointments', icon: <Calendar size={20} color={colors.primary} /> },
+  { id: 'emergency', label: 'emergency', icon: <AlertTriangle size={20} color={colors.danger} /> },
+  { id: 'mental-health', label: 'mental-health', icon: <Heart size={20} color={colors.warning} /> },
+  { id: 'community', label: 'community', icon: <Users size={20} color={colors.primary} /> },
+  { id: 'library', label: 'library', icon: <BookOpen size={20} color={colors.primary} /> },
+  { id: 'rewards', label: 'rewards', icon: <Award size={20} color={colors.warning} /> },
 ];
 
 const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [language, setLanguage] = useState('English');
+  const t = translations[language] || translations['English'];
 
   // Responsive check
   const isMobile = window.innerWidth < 768;
@@ -160,43 +357,10 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
         <Users size={24} color={colors.gray600} />
       </div>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 500, color: colors.gray700 }}>User Profile</div>
-        <div style={{ fontSize: 12, color: colors.gray500 }}>1250 XP</div>
+        <div style={{ fontSize: 14, fontWeight: 500, color: colors.gray700 }}>{t.userProfile}</div>
+        <div style={{ fontSize: 12, color: colors.gray500 }}>1250 {t.xp}</div>
       </div>
     </div>
-  );
-
-  // Sidebar nav
-  const nav = (
-    <nav style={{ padding: '1.5rem 0.5rem', flex: 1 }}>
-      {navItems.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => setCurrentPage(item.id)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            padding: '0.75rem 1rem',
-            fontSize: 15,
-            fontWeight: 500,
-            border: 'none',
-            background: 'none',
-            borderRadius: 8,
-            color: colors.gray600,
-            marginBottom: 6,
-            cursor: 'pointer',
-            backgroundColor: item.id === currentPage ? colors.blue50 : 'none',
-            transition: 'background 0.2s',
-          }}
-          onMouseEnter={e => e.target.style.backgroundColor = colors.gray100}
-          onMouseLeave={e => e.target.style.backgroundColor = item.id === currentPage ? colors.blue50 : 'none'}
-        >
-          <span style={{ marginRight: 12 }}>{item.icon}</span>
-          {item.label}
-        </button>
-      ))}
-    </nav>
   );
 
   // Mobile menu
@@ -227,7 +391,7 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
           padding: '0 1rem',
           borderBottom: `1px solid ${colors.gray200}`,
         }}>
-          <span style={{ fontSize: 20, fontWeight: 700, color: colors.gray800 }}>HealthGPT SA</span>
+          <span style={{ fontSize: 20, fontWeight: 700, color: colors.gray800 }}>MzansiCare</span>
           <button onClick={() => setIsMenuOpen(false)} style={{ background: 'none', border: 'none', padding: 8, borderRadius: 6 }}>
             <X size={24} color={colors.gray600} />
           </button>
@@ -254,13 +418,13 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
           padding: 20,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontWeight: 500, color: card.titleColor }}>{card.title}</span>
+            <span style={{ fontWeight: 500, color: card.titleColor }}>{t[card.title.replace(' ', '').toLowerCase()] || t[card.title.replace(' ', '')] || card.title}</span>
             {card.icon}
           </div>
           <div style={{ fontSize: 28, fontWeight: 700, color: colors.gray800 }}>
             {card.value} <span style={{ fontSize: 14, fontWeight: 400, color: colors.gray600 }}>{card.unit}</span>
           </div>
-          <div style={{ fontSize: 12, color: card.statusColor, marginTop: 4 }}>{card.status}</div>
+          <div style={{ fontSize: 12, color: card.statusColor, marginTop: 4 }}>{t[card.status.replace(' ', '').toLowerCase()] || card.status}</div>
         </div>
       ))}
     </div>
@@ -278,7 +442,7 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
         <QuickActionCard
           key={idx}
           icon={action.icon}
-          title={action.title}
+          title={t[action.page === 'appointments' ? (idx === 0 ? 'bookAppointment' : 'findClinic') : action.page === 'scan' ? 'scanMedicine' : action.page === 'emergency' ? 'emergencyHelp' : action.title] || action.title}
           color={action.color}
           onClick={() => setCurrentPage(action.page)}
           translationMode={props.translationMode}
@@ -360,8 +524,8 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <span style={{ fontSize: 24, fontWeight: 700, color: colors.gray800 }}>Welcome back</span>
-          <div style={{ color: colors.gray600, marginTop: 4 }}>Healthcare that speaks your language—anytime, anywhere.</div>
+          <span style={{ fontSize: 24, fontWeight: 700, color: colors.gray800 }}>{t.welcome}</span>
+          <div style={{ color: colors.gray600, marginTop: 4 }}>{t.tagline}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
@@ -377,20 +541,21 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
           >
             <Volume2 size={20} color={colors.gray600} />
           </button>
-          {/* Language selector placeholder */}
-          <select style={{
-            border: `1px solid ${colors.gray300}`,
-            borderRadius: 8,
-            padding: '6px 12px',
-            fontSize: 14,
-            color: colors.gray700,
-            outline: 'none',
-          }}>
-            <option>English</option>
-            <option>isiZulu</option>
-            <option>isiXhosa</option>
-            <option>Afrikaans</option>
-            <option>Sesotho</option>
+          <select
+            style={{
+              border: `1px solid ${colors.gray300}`,
+              borderRadius: 8,
+              padding: '6px 12px',
+              fontSize: 14,
+              color: colors.gray700,
+              outline: 'none',
+            }}
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+          >
+            {Object.keys(translations).map(lang => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
           </select>
           {logoutButton}
         </div>
@@ -432,14 +597,14 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
         <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', border: `1px solid ${colors.gray200}`, padding: 24, marginBottom: 24 }}>
           <h3 style={{ fontWeight: 600, color: colors.gray800, marginBottom: 16, display: 'flex', alignItems: 'center' }}>
             <Calendar size={20} style={{ marginRight: 8, color: colors.primary }} />
-            {props.t.nextAppointment || 'Next Appointment'}
+            {t.nextAppointment}
           </h3>
           <div style={{ background: colors.blue50, borderRadius: 12, padding: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <h4 style={{ fontWeight: 500, color: colors.gray800, margin: 0 }}>KwaMashu PHC Clinic</h4>
-                <p style={{ fontSize: 14, color: colors.gray600, margin: 0 }}>General Checkup</p>
-                <p style={{ fontSize: 14, color: colors.primary, margin: '8px 0 0 0' }}>Tomorrow, 10:00 AM</p>
+                <p style={{ fontSize: 14, color: colors.gray600, margin: 0 }}>{t.generalCheckup}</p>
+                <p style={{ fontSize: 14, color: colors.primary, margin: '8px 0 0 0' }}>{t.tomorrow}, 10:00 AM</p>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: 13, color: colors.gray500 }}>Wait time</div>
@@ -453,16 +618,16 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
         <div style={{ background: 'linear-gradient(90deg, #4ade80 0%, #3b82f6 100%)', color: 'white', padding: 24, borderRadius: 16, marginBottom: 24 }}>
           <h3 style={{ fontWeight: 600, marginBottom: 8, display: 'flex', alignItems: 'center' }}>
             <Heart size={20} style={{ marginRight: 8 }} />
-            {props.t.dailyTip || 'Daily Tip'}
+            {t.dailyTip}
           </h3>
           <p style={{ fontSize: 14, opacity: 0.9 }}>
-            Drinking 8 glasses of water daily helps your body flush out toxins and keeps your skin healthy.
+            {t.tipText}
           </p>
           <button style={{ marginTop: 12, background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: 10, padding: '8px 20px', color: 'white', fontWeight: 500, fontSize: 14, cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.3)'}
             onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
           >
-            Learn More
+            {t.learnMore}
           </button>
         </div>
 
@@ -470,13 +635,13 @@ const DashboardView = ({ setCurrentPage, currentPage = 'dashboard', ...props }) 
         <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', border: `1px solid ${colors.gray200}`, padding: 24, marginBottom: 24 }}>
           <h3 style={{ fontWeight: 600, color: colors.gray800, marginBottom: 16, display: 'flex', alignItems: 'center' }}>
             <Award size={20} style={{ marginRight: 8, color: colors.warning }} />
-            {props.t.earnedBadges || 'Recent Badges'}
+            {t.earnedBadges}
           </h3>
           <div style={{ display: 'flex', gap: 24 }}>
             {/* Use Badge component for each badge */}
-            <Badge icon={'\uD83C\uDFC6'} title="Appointment Keeper" />
-            <Badge icon={'\uD83D\uDC8A'} title="Medicine Master" />
-            <Badge icon={'\u2764\uFE0F'} title={props.t.healthHero || 'Health Hero'} />
+            <Badge icon={'\uD83C\uDFC6'} title={t.appointmentKeeper} />
+            <Badge icon={'\uD83D\uDC8A'} title={t.medicineMaster} />
+            <Badge icon={'\u2764\uFE0F'} title={t.healthHero} />
           </div>
         </div>
       </div>

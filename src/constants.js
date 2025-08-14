@@ -80,7 +80,7 @@ export const medicalTerms = {
 
 export const translations = {
   en: {
-    title: 'HealthGPT SA',
+  title: 'MzansiCare',
     tagline: 'Healthcare that speaks your language—anytime, anywhere.',
     dashboard: 'Dashboard',
     assistant: 'AI Assistant',
@@ -126,7 +126,7 @@ export const translations = {
     translate: 'Translate'
   },
   zu: {
-    title: 'HealthGPT SA',
+  title: 'MzansiCare',
     tagline: 'Ukunakekelwa kwezempilo okukhuluma ulimi lwakho—nganoma nini, nganoma kuphi.',
     dashboard: 'Ibhodi',
     assistant: 'Umsizi we-AI',

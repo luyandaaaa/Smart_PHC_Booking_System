@@ -219,7 +219,7 @@ const DoctorDashboard = () => {
             <Stethoscope size={24} color="white" />
           </div>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: colors.gray800 }}>HealthGPT SA</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: colors.gray800 }}>MzansiCare</div>
             <div style={{ fontSize: 12, color: colors.gray500 }}>Doctor Portal</div>
           </div>
         </div>
@@ -324,7 +324,7 @@ const DoctorDashboard = () => {
       </button>
       
       <div style={{ fontSize: 18, fontWeight: 700, color: colors.gray800 }}>
-        HealthGPT SA
+  MzansiCare
       </div>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
