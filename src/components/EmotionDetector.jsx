@@ -164,7 +164,6 @@ const EmotionDetector = ({ onEmotionDetected }) => {
           overflow: 'hidden',
           aspectRatio: '16/9',
           background: 'linear-gradient(90deg, #f0fdfa 0%, #bae6fd 100%)',
-          border: `2px solid ${colors.primary}`,
           boxShadow: '0 2px 8px 0 rgba(56,189,248,0.10)'
         }}>
           <video
@@ -223,29 +222,93 @@ const EmotionDetector = ({ onEmotionDetected }) => {
 
         <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
           {!isStreaming ? (
-            <Button onClick={startCamera} style={{ flex: 1 }}>
-              <Video size={16} style={{ marginRight: 8 }} />
+            <button
+              onClick={startCamera}
+              style={{
+                flex: 1,
+                background: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+                boxShadow: '0 1px 2px 0 rgba(59,130,246,0.10)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                transition: 'background 0.2s',
+              }}
+              onMouseOver={e => e.currentTarget.style.background = colors.primaryHover}
+              onMouseOut={e => e.currentTarget.style.background = colors.primary}
+            >
+              <Video size={18} style={{ marginRight: 8 }} />
               Start Camera
-            </Button>
+            </button>
           ) : (
-            <Button onClick={stopCamera} variant="destructive" style={{ flex: 1 }}>
+            <button
+              onClick={stopCamera}
+              style={{
+                flex: 1,
+                background: colors.danger,
+                color: '#fff',
+                border: 'none',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+                boxShadow: '0 1px 2px 0 rgba(239,68,68,0.10)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                transition: 'background 0.2s',
+              }}
+              onMouseOver={e => e.currentTarget.style.background = colors.dangerHover}
+              onMouseOut={e => e.currentTarget.style.background = colors.danger}
+            >
               Stop Camera
-            </Button>
+            </button>
           )}
 
-          <Button
+          <button
             onClick={analyzeCurrentFrame}
             disabled={!isStreaming || isAnalyzing || !isModelLoaded}
-            variant="outline"
-            style={{ flex: 1 }}
+            style={{
+              flex: 1,
+              background: colors.success,
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              padding: '10px 0',
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: (!isStreaming || isAnalyzing || !isModelLoaded) ? 'not-allowed' : 'pointer',
+              opacity: (!isStreaming || isAnalyzing || !isModelLoaded) ? 0.6 : 1,
+              boxShadow: '0 1px 2px 0 rgba(16,185,129,0.10)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              transition: 'background 0.2s',
+            }}
+            onMouseOver={e => {
+              if (!e.currentTarget.disabled) e.currentTarget.style.background = '#059669';
+            }}
+            onMouseOut={e => {
+              if (!e.currentTarget.disabled) e.currentTarget.style.background = colors.success;
+            }}
           >
             Analyze Now
-          </Button>
+          </button>
         </div>
 
         {currentEmotion && (
           <Card style={{
-            background: '#fff',
+            background: '#fef9c3', // soft yellow
             borderRadius: 12,
             boxShadow: '0 1px 2px 0 rgba(59,130,246,0.05)',
             padding: 16,

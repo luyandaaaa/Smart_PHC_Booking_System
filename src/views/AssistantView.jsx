@@ -14,14 +14,16 @@ import {
   FileText,
   Activity,
   AlertTriangle,
+  AlertCircle,
   Eye,
   EyeOff,
   CheckCircle,
   Clock,
   Zap,
   Heart,
-  MessageSquare
-  // Pills icon removed due to lucide-react version
+  MessageSquare,
+  Map,
+  Thermometer
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
@@ -41,7 +43,45 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
   const [showSignVideo, setShowSignVideo] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [showChat, setShowChat] = useState(false);
+
+  // Outbreak Radar state
   const [selectedLang, setSelectedLang] = useState('en');
+  const [locationConsent, setLocationConsent] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [showHealthMap, setShowHealthMap] = useState(false);
+  const [communityHealthData, setCommunityHealthData] = useState({
+    alerts: [
+      { message: "Increase in diarrhea cases", action: "Practice good hand hygiene", severity: "high" },
+      { message: "Fever trend rising", action: "Monitor symptoms, stay hydrated", severity: "medium" }
+    ],
+    trends: [
+      { condition: "Diarrhea", change: "+5%", timeframe: "this week" },
+      { condition: "Fever", change: "+3%", timeframe: "this week" },
+      { condition: "Cough", change: "-2%", timeframe: "this week" }
+    ]
+  });
+
+  // Fix: Add requestLocationPermission function
+  const requestLocationPermission = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocationConsent(true);
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          setLocationConsent(false);
+          alert('Location access denied. Some features may be unavailable.');
+        }
+      );
+    } else {
+      setLocationConsent(false);
+      alert('Geolocation is not supported by your browser.');
+    }
+  };
 
   // Medical features state
   const [imageResult, setImageResult] = useState(null);
@@ -262,47 +302,44 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#fff' }}>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div style={{ flex: 1, padding: '2rem 2.5vw', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
         {/* Header */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '20px',
-          padding: '1.5rem',
-          marginBottom: '1.5rem',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
+          background: '#e0f2fe', // light blue
+          color: '#1e293b',
+          padding: 24,
+          borderRadius: 12,
+          marginBottom: 24,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          border: '1px solid #bae6fd',
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          alignItems: 'center'
         }}>
-          <div>
-            <h1 style={{
-              fontSize: largeText ? '2rem' : '1.5rem',
-              fontWeight: 'bold',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              margin: 0
-            }}>
-              AI Medical Assistant
-            </h1>
-            {showSignVideo && (
-              <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: '12px',
-                padding: '1rem',
-                color: 'white',
-                marginTop: 12
-              }}>
-                <div style={{ fontSize: '0.875rem', opacity: 0.9 }}>
-                  📹 Sign language interpretation would be available here
-                </div>
-              </div>
-            )}
-          </div>
+          <h2 style={{ fontSize: 24, fontWeight: 'bold', margin: 0, color: '#2563eb' }}>AI Medical Assistant</h2>
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <button
               onClick={() => setLargeText(!largeText)}
@@ -318,21 +355,6 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
               title="Toggle Large Text"
             >
               {largeText ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-            <button
-              onClick={() => setShowSignVideo(!showSignVideo)}
-              style={{
-                background: showSignVideo ? '#10b981' : '#f3f4f6',
-                color: showSignVideo ? 'white' : '#374151',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.5rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              title="Sign Language Support"
-            >
-              <Languages size={16} />
             </button>
             <button
               onClick={() => setShowChat(true)}
@@ -428,7 +450,7 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
             )}
           </div>
 
-          {/* OCR - Enhanced Prescription Reader */}
+          {/* Outbreak Radar */}
           <div style={{
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(10px)',
@@ -438,31 +460,71 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
             border: '1px solid rgba(255, 255, 255, 0.2)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <FileText size={20} style={{ color: '#10b981' }} />
+              <Map size={20} style={{ color: '#ef4444' }} />
               <h3 style={{ fontSize: largeText ? '1.25rem' : '1rem', fontWeight: '600', margin: 0 }}>
-                Prescription Reader
+                Outbreak Radar
               </h3>
             </div>
 
-            <input
-              ref={ocrInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleOcrUpload}
-              style={{ display: 'none' }}
-            />
+            <div style={{ marginBottom: '1rem', fontSize: '0.875rem', color: '#4b5563' }}>
+              View health trends in your community and contribute anonymous symptom reports.
+            </div>
+
+            {!locationConsent ? (
+              <div style={{
+                background: 'linear-gradient(135deg, #f59e0b20 0%, #f59e0b10 100%)',
+                border: '1px solid #f59e0b40',
+                borderRadius: '8px',
+                padding: '0.75rem',
+                fontSize: '0.875rem',
+                marginBottom: '1rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <AlertTriangle size={16} style={{ color: '#f59e0b' }} />
+                  <span>Location access required</span>
+                </div>
+                <button
+                  onClick={requestLocationPermission}
+                  style={{
+                    background: '#f59e0b',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '0.25rem 0.5rem',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    marginTop: '0.5rem'
+                  }}
+                >
+                  Enable Location
+                </button>
+              </div>
+            ) : (
+              <div style={{
+                background: 'linear-gradient(135deg, #10b98120 0%, #10b98110 100%)',
+                border: '1px solid #10b98140',
+                borderRadius: '8px',
+                padding: '0.75rem',
+                fontSize: '0.875rem',
+                marginBottom: '1rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <CheckCircle size={16} style={{ color: '#10b981' }} />
+                  <span>Location sharing enabled</span>
+                </div>
+              </div>
+            )}
 
             <button
-              onClick={() => ocrInputRef.current?.click()}
-              disabled={ocrProcessing}
+              onClick={() => setShowHealthMap(true)}
               style={{
                 width: '100%',
-                background: ocrProcessing ? '#94a3b8' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '12px',
                 padding: '0.75rem',
-                cursor: ocrProcessing ? 'not-allowed' : 'pointer',
+                cursor: 'pointer',
                 fontWeight: '500',
                 display: 'flex',
                 alignItems: 'center',
@@ -471,47 +533,30 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
                 marginBottom: '1rem'
               }}
             >
-              {ocrProcessing ? <Clock size={16} /> : <Camera size={16} />}
-              {ocrProcessing ? 'Reading Prescription...' : 'Scan Prescription'}
+              <Map size={16} />
+              View Health Map
             </button>
 
-            {ocrResult && (
+            {communityHealthData.alerts.length > 0 && (
               <div style={{
-                background: 'linear-gradient(135deg, #10b98120 0%, #10b98110 100%)',
-                border: '1px solid #10b98140',
+                background: 'linear-gradient(135deg, #ef444420 0%, #ef444410 100%)',
+                border: '1px solid #ef444440',
                 borderRadius: '8px',
                 padding: '0.75rem',
-                fontSize: largeText ? '1rem' : '0.875rem',
-                whiteSpace: 'pre-wrap',
-                fontFamily: 'monospace'
+                fontSize: '0.875rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <FileText size={16} style={{ color: '#10b981' }} />
-                  <span style={{ fontWeight: '600' }}>Prescription Details:</span>
+                  <AlertCircle size={16} style={{ color: '#ef4444' }} />
+                  <span style={{ fontWeight: '600' }}>Community Alerts</span>
                 </div>
-                {ocrResult}
-                <button
-                  onClick={() => {
-                    setInputText('Can you explain this prescription?');
-                    setShowChat(true);
-                  }}
-                  style={{
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    color: '#10b981',
-                    border: '1px solid #10b981',
-                    borderRadius: '6px',
-                    padding: '0.25rem 0.5rem',
-                    fontSize: '0.75rem',
-                    cursor: 'pointer',
-                    marginTop: '0.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem'
-                  }}
-                >
-                  <MessageCircle size={12} />
-                  Ask About This
-                </button>
+                {communityHealthData.alerts.slice(0, 2).map((alert, index) => (
+                  <div key={index} style={{ marginBottom: '0.25rem' }}>
+                    <div style={{ fontWeight: '500' }}>{alert.message}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                      Action: {alert.action}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -667,344 +712,394 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
           </div>
         </div>
 
-        {/* Chat Interface */}
-        {showChat && (
+        {/* Health Map Modal */}
+        {showHealthMap && (
           <div style={{
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.25)',
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0,0,0,0.5)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            pointerEvents: 'auto',
           }}>
             <div style={{
-              background: 'rgba(255,255,255,0.98)',
-              borderRadius: 20,
-              boxShadow: '0 8px 32px rgba(59,130,246,0.18)',
-              width: '95vw',
-              maxWidth: 480,
-              minHeight: 480,
-              maxHeight: '90vh',
-              display: 'flex',
-              flexDirection: 'column',
+              background: 'white',
+              borderRadius: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+              width: '90%',
+              maxWidth: '800px',
+              maxHeight: '90%',
+              padding: '1.5rem',
+              overflow: 'auto',
               position: 'relative',
-              overflow: 'hidden'
+              display: 'block',
             }}>
               <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                padding: '1rem 1.5rem',
-                color: 'white',
                 display: 'flex',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                gap: '0.5rem',
-                fontWeight: 600,
-                fontSize: largeText ? '1.1rem' : '1rem'
+                marginBottom: '1rem',
+                paddingBottom: '0.5rem',
+                borderBottom: '1px solid #e5e7eb',
+                background: '#e0f2fe',
+                borderRadius: '12px 12px 0 0',
+                paddingTop: '1rem',
+                paddingLeft: '1rem',
+                paddingRight: '1rem',
               }}>
-                <MessageCircle size={20} />
-                AI Medical Chat
+                <h2 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: '600',
+                  margin: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <Map size={20} style={{ color: '#ef4444' }} />
+                  Community Health Map
+                </h2>
                 <button
-                  onClick={() => setShowChat(false)}
+                  onClick={() => setShowHealthMap(false)}
                   style={{
-                    marginLeft: 'auto',
                     background: 'transparent',
                     border: 'none',
-                    color: 'white',
-                    fontSize: 22,
+                    color: '#6b7280',
+                    fontSize: '1.5rem',
                     cursor: 'pointer',
-                    fontWeight: 700
+                    padding: '0.25rem'
                   }}
-                  title="Close Chat"
                 >
                   ×
                 </button>
               </div>
 
-              {/* Messages */}
               <div style={{
-                padding: '1.5rem',
-                minHeight: 320,
-                maxHeight: 340,
-                overflowY: 'auto',
-                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-                flex: 1
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem',
+                marginBottom: '1.5rem'
               }}>
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '0.75rem',
-                      marginBottom: '1rem',
-                      justifyContent: message.sender === 'user' ? 'flex-end' : 'flex-start'
-                    }}
-                  >
-                    {message.sender === 'bot' && (
-                      <div style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        <MessageCircle size={18} color="white" />
-                      </div>
-                    )}
-
-                    <div style={{
-                      maxWidth: '70%',
-                      background: message.sender === 'bot'
-                        ? 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
-                        : 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                      color: message.sender === 'bot' ? '#1f2937' : 'white',
-                      padding: '0.875rem 1.125rem',
-                      borderRadius: message.sender === 'bot' ? '18px 18px 18px 4px' : '18px 18px 4px 18px',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                      border: message.sender === 'bot' ? '1px solid rgba(0, 0, 0, 0.05)' : 'none'
-                    }}>
-                      <p style={{
-                        fontSize: largeText ? '1rem' : '0.9rem',
-                        lineHeight: '1.5',
-                        margin: 0
-                      }}>
-                        {message.text}
-                      </p>
-                      <div style={{
-                        fontSize: '0.75rem',
-                        opacity: 0.7,
-                        marginTop: '0.25rem'
-                      }}>
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    </div>
-
-                    {message.sender === 'user' && (
-                      <div style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        <User size={18} color="#4b5563" />
-                      </div>
-                    )}
-                  </div>
-                ))
-                }
-                
-                {isProcessing && (
-                  <div style={{
+                <div style={{
+                  background: '#f9fafb',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  height: '300px',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <h3 style={{
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    margin: '0 0 1rem 0',
                     display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '0.75rem',
-                    marginBottom: '1rem'
+                    alignItems: 'center',
+                    gap: '0.5rem'
                   }}>
+                    <Thermometer size={16} style={{ color: '#ef4444' }} />
+                    Heatmap
+                  </h3>
+                  <div style={{
+                    flex: 1,
+                    background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                    {/* Simulated heatmap visualization */}
                     <div style={{
-                      width: '36px',
-                      height: '36px',
-                      background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      background: 'radial-gradient(circle at 30% 40%, rgba(239,68,68,0.3) 0%, transparent 70%), radial-gradient(circle at 70% 60%, rgba(245,158,11,0.2) 0%, transparent 70%)'
+                    }}></div>
+                    <div style={{
+                      position: 'absolute',
+                      top: '40%',
+                      left: '30%',
+                      width: '24px',
+                      height: '24px',
+                      background: 'rgba(239,68,68,0.7)',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold'
                     }}>
-                      <MessageCircle size={18} color="white" />
+                      15
                     </div>
                     <div style={{
-                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                      borderRadius: '18px 18px 18px 4px',
-                      padding: '0.875rem 1.125rem',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                      border: '1px solid rgba(0, 0, 0, 0.05)'
+                      position: 'absolute',
+                      top: '60%',
+                      left: '70%',
+                      width: '18px',
+                      height: '18px',
+                      background: 'rgba(245,158,11,0.7)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{
-                          width: '8px',
-                          height: '8px',
-                          background: '#3b82f6',
-                          borderRadius: '50%',
-                          animation: 'pulse 1.5s ease-in-out infinite'
-                        }}></div>
-                        <div style={{
-                          width: '8px',
-                          height: '8px',
-                          background: '#3b82f6',
-                          borderRadius: '50%',
-                          animation: 'pulse 1.5s ease-in-out infinite',
-                          animationDelay: '0.3s'
-                        }}></div>
-                        <div style={{
-                          width: '8px',
-                          height: '8px',
-                          background: '#3b82f6',
-                          borderRadius: '50%',
-                          animation: 'pulse 1.5s ease-in-out infinite',
-                          animationDelay: '0.6s'
-                        }}></div>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280', marginLeft: '0.5rem' }}>
-                          AI is thinking...
-                        </span>
+                      8
+                    </div>
+                    {userLocation && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        width: '12px',
+                        height: '12px',
+                        background: '#3b82f6',
+                        borderRadius: '50%',
+                        border: '2px solid white'
+                      }}></div>
+                    )}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '0.5rem',
+                      left: '0.5rem',
+                      background: 'white',
+                      borderRadius: '4px',
+                      padding: '0.25rem 0.5rem',
+                      fontSize: '0.75rem',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <div style={{ width: '8px', height: '8px', background: '#ef4444', borderRadius: '50%' }}></div>
+                        <span>Diarrhea</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <div style={{ width: '8px', height: '8px', background: '#f59e0b', borderRadius: '50%' }}></div>
+                        <span>Fever</span>
                       </div>
                     </div>
                   </div>
-                )}
-                <div ref={messagesEndRef} />
+                </div>
+                <div style={{
+                  background: '#f9fafb',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  height: '300px',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <h3 style={{
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    margin: '0 0 1rem 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <Activity size={16} style={{ color: '#3b82f6' }} />
+                    Recent Trends
+                  </h3>
+                  <div style={{
+                    flex: 1,
+                    background: 'white',
+                    borderRadius: '8px',
+                    padding: '0.5rem',
+                    overflow: 'auto'
+                  }}>
+                    {communityHealthData.trends.map((trend, index) => (
+                      <div key={index} style={{
+                        padding: '0.5rem',
+                        borderBottom: index < communityHealthData.trends.length - 1 ? '1px solid #e5e7eb' : 'none',
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}>
+                        <span style={{ fontWeight: '500' }}>{trend.condition}</span>
+                        <span style={{
+                          color: trend.change.startsWith('+') ? '#ef4444' : '#10b981',
+                          fontWeight: '600'
+                        }}>
+                          {trend.change} {trend.timeframe}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Input Area */}
               <div style={{
-                padding: '1.5rem',
-                background: 'rgba(255, 255, 255, 0.8)',
-                borderTop: '1px solid rgba(0, 0, 0, 0.1)'
+                background: '#f9fafb',
+                borderRadius: '12px',
+                padding: '1rem',
+                marginBottom: '1.5rem'
               }}>
-                <div style={{
+                <h3 style={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  margin: '0 0 1rem 0',
                   display: 'flex',
-                  gap: '0.75rem',
-                  alignItems: 'flex-end',
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '0.75rem',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid rgba(0, 0, 0, 0.05)'
+                  alignItems: 'center',
+                  gap: '0.5rem'
                 }}>
-                  <textarea
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Type your medical question here..."
-                    style={{
-                      flex: 1,
-                      border: 'none',
-                      outline: 'none',
-                      resize: 'none',
-                      fontSize: largeText ? '1rem' : '0.9rem',
-                      lineHeight: '1.5',
-                      minHeight: '20px',
-                      maxHeight: '120px',
-                      fontFamily: 'inherit',
-                      background: 'transparent'
-                    }}
-                    rows={1}
-                    onInput={(e) => {
-                      e.target.style.height = 'auto';
-                      e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-                    }}
-                  />
-
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      onClick={handleVoiceToText}
-                      style={{
-                        background: isRecording
-                          ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
-                          : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
-                        color: isRecording ? 'white' : '#374151',
-                        border: 'none',
-                        borderRadius: '12px',
-                        padding: '0.75rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minWidth: '44px',
-                        height: '44px'
-                      }}
-                      title={isRecording ? 'Recording...' : 'Voice Input'}
-                    >
-                      {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
-                    </button>
-
-                    <button
-                      onClick={handleSendMessage}
-                      disabled={!inputText.trim() || isProcessing}
-                      style={{
-                        background: (!inputText.trim() || isProcessing)
-                          ? 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)'
-                          : 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '12px',
-                        padding: '0.75rem 1.25rem',
-                        cursor: (!inputText.trim() || isProcessing) ? 'not-allowed' : 'pointer',
-                        fontWeight: '600',
-                        transition: 'all 0.2s',
+                  <AlertCircle size={16} style={{ color: '#ef4444' }} />
+                  Active Alerts
+                </h3>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  gap: '0.75rem'
+                }}>
+                  {communityHealthData.alerts.map((alert, index) => (
+                    <div key={index} style={{
+                      background: 'white',
+                      borderRadius: '8px',
+                      padding: '0.75rem',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
-                        minHeight: '44px'
-                      }}
-                    >
-                      {isProcessing ? (
-                        <>
-                          <Clock size={18} />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send size={18} />
-                          Send
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div style={{
-                  display: 'flex',
-                  gap: '0.5rem',
-                  marginTop: '1rem',
-                  flexWrap: 'wrap'
-                }}>
-                  {[ // Pills replaced with FileText for Medication help
-                    { text: 'Emergency symptoms', icon: AlertTriangle, color: '#ef4444' },
-                    { text: 'Medication help', icon: FileText, color: '#f59e0b' },
-                    { text: 'General health', icon: Heart, color: '#10b981' },
-                    { text: 'Symptom checker', icon: Activity, color: '#3b82f6' }
-                  ].map((action, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setInputText(action.text)}
-                      style={{
-                        background: `linear-gradient(135deg, ${action.color}20 0%, ${action.color}10 100%)`,
-                        color: action.color,
-                        border: `1px solid ${action.color}40`,
-                        borderRadius: '20px',
-                        padding: '0.5rem 1rem',
-                        fontSize: '0.8rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        fontWeight: '500'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = `linear-gradient(135deg, ${action.color}30 0%, ${action.color}20 100%)`;
-                        e.target.style.transform = 'translateY(-1px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = `linear-gradient(135deg, ${action.color}20 0%, ${action.color}10 100%)`;
-                        e.target.style.transform = 'none';
-                      }}
-                    >
-                      <action.icon size={14} />
-                      {action.text}
-                    </button>
+                        marginBottom: '0.25rem'
+                      }}>
+                        <div style={{
+                          width: '8px',
+                          height: '8px',
+                          background: getSeverityColor(alert.severity),
+                          borderRadius: '50%'
+                        }}></div>
+                        <span style={{ fontWeight: '500' }}>{alert.message}</span>
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                        Recommended: {alert.action}
+                      </div>
+                    </div>
                   ))}
                 </div>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '0.5rem'
+              }}>
+                <button
+                  onClick={() => setShowHealthMap(false)}
+                  style={{
+                    background: '#f3f4f6',
+                    color: '#374151',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.5rem 1rem',
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setShowHealthMap(false);
+                    setShowChat(false);
+                    setTimeout(() => {
+                      setShowChat(true);
+                      setInputText('Tell me more about the community health alerts');
+                    }, 50);
+                  }}
+                  style={{
+                    background: '#3b82f6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.5rem 1rem',
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  Ask About This
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Chat Interface */}
+        {showChat && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0,0,0,0.10)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'auto',
+          }}>
+            <div style={{
+              background: '#f3f4f6',
+              borderRadius: 20,
+              boxShadow: '0 8px 32px rgba(59,130,246,0.18)',
+              width: '95%',
+              maxWidth: 520,
+              minHeight: 480,
+              maxHeight: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              overflow: 'hidden',
+              padding: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <div style={{
+                background: 'white',
+                borderRadius: 16,
+                width: '100%',
+                height: '100%',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+              }}>
+                <button
+                  onClick={() => setShowChat(false)}
+                  style={{
+                    position: 'absolute',
+                    top: 12,
+                    right: 16,
+                    background: 'rgba(0,0,0,0.05)',
+                    border: 'none',
+                    color: '#374151',
+                    fontSize: 22,
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    zIndex: 2,
+                    borderRadius: 8,
+                    width: 36,
+                    height: 36
+                  }}
+                  title="Close Chat"
+                >
+                  ×
+                </button>
+                <iframe
+                  src="https://www.chatbase.co/chatbot-iframe/lVv9jnfLqeGT_lBuyRLBK"
+                  width="100%"
+                  style={{ height: '100%', minHeight: 700, border: 'none' }}
+                  frameBorder="0"
+                  title="Chatbase Medical Assistant"
+                  allow="clipboard-write;"
+                />
               </div>
             </div>
           </div>
@@ -1120,6 +1215,8 @@ const AssistantView = ({ currentPage = 'assistant', setCurrentPage }) => {
       `}</style>
     </div>
   );
-};
+}
+
+// ...existing code...
 
 export default AssistantView;

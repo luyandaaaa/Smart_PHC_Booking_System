@@ -18,12 +18,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
     setError(null);
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=health+medicine+wellness&language=en&sortBy=publishedAt&pageSize=20&apiKey=e9de140844174739815fe913063dee93`,
-        {
-          headers: {
-            'User-Agent': 'HealthLibrary/1.0'
-          }
-        }
+        `https://newsapi.org/v2/everything?q=health+medicine+wellness&language=en&sortBy=publishedAt&pageSize=20&apiKey=e9de140844174739815fe913063dee93`
       );
       
       if (!response.ok) {
@@ -300,26 +295,41 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div style={{ flex: 1, padding: '2rem 2.5vw', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
         {/* Header */}
         <div style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          borderRadius: 24,
+          background: '#e0f2fe', // light blue
+          borderRadius: 32,
           padding: '2rem',
           marginBottom: '2rem',
-          color: 'white',
+          color: '#1e293b',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'visible',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+          border: '1.5px solid #d1d5db' // subtle black/gray
         }}>
-          <div style={{
-            position: 'absolute',
-            top: -50,
-            right: -50,
-            width: 200,
-            height: 200,
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '50%'
-          }} />
+          {/* Removed the absolutely positioned white circle to make border radius visible */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, marginBottom: '0.5rem' }}>
@@ -329,16 +339,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                 Real-time trusted medical information at your fingertips
               </p>
               
-              <div style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Users size={20} />
-                  <span>Live Content Updates</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Star size={20} />
-                  <span>4.9 Average Rating</span>
-                </div>
-              </div>
+              {/* Removed Live Content Updates and 4.9 Average Rating */}
             </div>
             <button
               onClick={handleRefresh}
@@ -394,8 +395,8 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   flex: 1,
-                  background: activeTab === tab.id ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'transparent',
-                  color: activeTab === tab.id ? 'white' : '#64748b',
+                  background: activeTab === tab.id ? '#bae6fd' : 'transparent',
+                  color: activeTab === tab.id ? '#111827' : '#64748b',
                   border: 'none',
                   borderRadius: 12,
                   padding: '1rem',
@@ -462,7 +463,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                     )}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                       <div style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: '#bae6fd',
                         color: 'white',
                         padding: '0.5rem 1rem',
                         borderRadius: 20,
@@ -652,7 +653,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: '#bae6fd',
                       color: 'white',
                       padding: '0.5rem 1rem',
                       borderRadius: 20,
@@ -711,7 +712,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: '#bae6fd',
                       color: 'white',
                       padding: '0.5rem 1rem',
                       borderRadius: 20,
@@ -739,7 +740,7 @@ const HealthLibraryView = ({ setCurrentPage = () => {}, currentPage = 'healthLib
                   </p>
                   <button 
                     style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: '#bae6fd',
                       color: 'white',
                       border: 'none',
                       borderRadius: 12,

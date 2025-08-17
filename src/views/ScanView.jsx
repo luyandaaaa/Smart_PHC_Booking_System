@@ -462,12 +462,12 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
         .corner.bottom-right { bottom: 10%; right: 10%; border-left: none; border-top: none; }
       `}</style>
       
-      <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: 'white' }}>
         <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
         
         <div style={{ flex: 1, padding: '2rem 2.5vw', maxWidth: 1400, margin: '0 auto', width: '100%' }}>
           <div style={{
-            background: 'white',
+            background: '#f3f4f6',
             borderRadius: 16,
             boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
             border: '1px solid #e5e7eb',
@@ -475,20 +475,21 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
           }}>
             {/* Header */}
             <div style={{
-              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-              color: 'white',
+              background: '#e0f2fe',
+              color: '#1e293b',
               padding: 24,
               borderRadius: '16px 16px 0 0',
               margin: '-24px -24px 24px -24px',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              gap: 8
+              gap: 8,
+              borderBottom: '1px solid #bae6fd'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 'bold', margin: 0 }}>Medication Scanner</h2>
-                  <p style={{ opacity: 0.9, margin: 0, fontSize: 14 }}>Scan and identify your medications</p>
+                  <h2 style={{ fontSize: 24, fontWeight: 'bold', margin: 0, color: '#2563eb' }}>Medication Scanner</h2>
+                  <p style={{ opacity: 0.9, margin: 0, fontSize: 14, color: '#1e293b' }}>Scan and identify your medications</p>
                 </div>
               </div>
             </div>
@@ -616,8 +617,8 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                     border: 'none',
                     borderRadius: 10,
                     background: loading 
-                      ? 'linear-gradient(135deg, #9ca3af, #6b7280)' 
-                      : 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                      ? '#9ca3af' 
+                      : '#2563eb',
                     color: 'white',
                     fontSize: 14,
                     fontWeight: 600,
@@ -641,8 +642,8 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                     border: 'none',
                     borderRadius: 10,
                     background: (!scanning || loading) 
-                      ? 'linear-gradient(135deg, #9ca3af, #6b7280)'
-                      : 'linear-gradient(135deg, #10b981, #059669)',
+                      ? '#9ca3af'
+                      : '#10b981',
                     color: 'white',
                     fontSize: 14,
                     fontWeight: 600,
@@ -674,10 +675,10 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                     border: 'none',
                     borderRadius: 10,
                     background: (!scanning || loading)
-                      ? 'linear-gradient(135deg, #9ca3af, #6b7280)'
+                      ? '#9ca3af'
                       : autoScan 
-                        ? 'linear-gradient(135deg, #f59e0b, #d97706)' 
-                        : 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                        ? '#f59e0b' 
+                        : '#8b5cf6',
                     color: 'white',
                     fontSize: 14,
                     fontWeight: 600,
@@ -701,8 +702,8 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                     border: 'none',
                     borderRadius: 10,
                     background: !scanning 
-                      ? 'linear-gradient(135deg, #9ca3af, #6b7280)'
-                      : 'linear-gradient(135deg, #ef4444, #dc2626)',
+                      ? '#9ca3af'
+                      : '#ef4444',
                     color: 'white',
                     fontSize: 14,
                     fontWeight: 600,
@@ -721,7 +722,7 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
               {/* Error Display */}
               {error && (
                 <div style={{
-                  background: 'linear-gradient(135deg, #fee2e2, #fecaca)',
+                  background: '#fee2e2',
                   color: '#b91c1c',
                   borderRadius: 12,
                   padding: '16px 20px',
@@ -980,7 +981,7 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                         padding: '14px 24px',
                         border: 'none',
                         borderRadius: 10,
-                        background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                        background: '#6b7280',
                         color: 'white',
                         fontSize: 14,
                         fontWeight: 600,
@@ -1001,7 +1002,7 @@ const ScanView = ({ setCurrentPage, currentPage = 'scan' }) => {
                         padding: '14px 24px',
                         border: 'none',
                         borderRadius: 10,
-                        background: 'linear-gradient(135deg, #10b981, #059669)',
+                        background: '#10b981',
                         color: 'white',
                         fontSize: 14,
                         fontWeight: 600,

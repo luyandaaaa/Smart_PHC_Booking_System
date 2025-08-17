@@ -266,55 +266,7 @@ const DocAppointmentView = () => {
     </div>
   );
 
-  const SearchAndFilter = () => (
-    <div style={{
-      display: 'flex',
-      gap: 16,
-      marginBottom: 24,
-      flexWrap: 'wrap'
-    }}>
-      <div style={{ position: 'relative', flex: 1, minWidth: 300 }}>
-        <Search size={20} color={colors.gray400} style={{
-          position: 'absolute',
-          left: 12,
-          top: '50%',
-          transform: 'translateY(-50%)'
-        }} />
-        <input
-          type="text"
-          placeholder="Search patients or conditions..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '12px 12px 12px 44px',
-            border: `1px solid ${colors.gray300}`,
-            borderRadius: 8,
-            fontSize: 14,
-            outline: 'none'
-          }}
-        />
-      </div>
-      <select
-        value={filterStatus}
-        onChange={(e) => setFilterStatus(e.target.value)}
-        style={{
-          padding: '12px 16px',
-          border: `1px solid ${colors.gray300}`,
-          borderRadius: 8,
-          fontSize: 14,
-          minWidth: 150,
-          cursor: 'pointer'
-        }}
-      >
-        <option value="all">All Status</option>
-        <option value="confirmed">Confirmed</option>
-        <option value="pending">Pending</option>
-        <option value="urgent">Urgent</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-    </div>
-  );
+
 
   const AppointmentCard = ({ appointment }) => (
     <div style={{
@@ -668,10 +620,52 @@ const DocAppointmentView = () => {
   );
 
   return (
-    <div style={{ padding: 24, background: colors.gray50, minHeight: '100vh' }}>
-      <Header />
-      <SearchAndFilter />
-      {currentView === 'calendar' ? <CalendarView /> : <ListView />}
+    <div style={{
+      minHeight: '100vh',
+      background: '#fff',
+      display: 'flex',
+      flexDirection: 'row',
+    }}>
+      {/* Sidebar could go here if needed for navigation, as in RewardsView */}
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+      >
+        {/* Header section with blue50 background, rounded, shadow, border */}
+        <div style={{
+          background: colors.blue50,
+          color: colors.gray800,
+          padding: 32,
+          borderRadius: 24,
+          marginBottom: 24,
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)'
+        }}>
+          <Header />
+        </div>
+
+        {/* Main content area: calendar or list view, styled as card */}
+        <div style={{
+          background: '#e0f2fe',
+          borderRadius: 16,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          border: '1px solid #e5e7eb',
+          padding: 24,
+          marginBottom: 24
+        }}>
+          {currentView === 'calendar' ? <CalendarView /> : <ListView />}
+        </div>
+      </div>
     </div>
   );
 };

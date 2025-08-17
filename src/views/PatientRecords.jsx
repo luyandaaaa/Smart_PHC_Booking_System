@@ -177,21 +177,32 @@ const PatientRecords = () => {
     }
   ];
 
+  // Improved filtering: search matches name, conditions, phone, email, idNumber; chronic filter matches any chronic condition
+  const chronicKeywords = [
+    'diabetes', 'hypertension', 'asthma', 'cholesterol', 'hiv', 'aids', 'tb', 'cancer', 'arthritis', 'copd', 'epilepsy', 'heart', 'stroke', 'renal', 'kidney', 'liver', 'lung', 'depression', 'mental', 'pregnancy'
+  ];
   const filteredPatients = patients.filter(patient => {
-    const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         patient.conditions.some(condition => 
-                           condition.toLowerCase().includes(searchTerm.toLowerCase())
-                         );
-    
-    const matchesFilter = selectedFilter === 'all' || 
-                         patient.riskLevel === selectedFilter ||
-                         (selectedFilter === 'chronic' && 
-                          patient.conditions.some(condition => 
-                            ['diabetes', 'hypertension', 'asthma'].some(chronic => 
-                              condition.toLowerCase().includes(chronic)
-                            )
-                          ));
-    
+    const search = searchTerm.trim().toLowerCase();
+    // Search matches name, conditions, phone, email, idNumber
+    const matchesSearch =
+      !search ||
+      patient.name.toLowerCase().includes(search) ||
+      patient.phone.toLowerCase().includes(search) ||
+      patient.email.toLowerCase().includes(search) ||
+      patient.idNumber.toLowerCase().includes(search) ||
+      patient.conditions.some(condition => condition.toLowerCase().includes(search));
+
+    let matchesFilter = false;
+    if (selectedFilter === 'all') {
+      matchesFilter = true;
+    } else if (selectedFilter === 'chronic') {
+      matchesFilter = patient.conditions.some(condition =>
+        chronicKeywords.some(chronic => condition.toLowerCase().includes(chronic))
+      );
+    } else if (['high', 'medium', 'low'].includes(selectedFilter)) {
+      matchesFilter = patient.riskLevel === selectedFilter;
+    }
+
     return matchesSearch && matchesFilter;
   });
 
@@ -220,7 +231,7 @@ const PatientRecords = () => {
             width: 48,
             height: 48,
             borderRadius: '50%',
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryHover} 100%)`,
+            background: colors.primary,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -362,7 +373,7 @@ const PatientRecords = () => {
                 width: 60,
                 height: 60,
                 borderRadius: '50%',
-                background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryHover} 100%)`,
+                background: colors.primary,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -649,146 +660,175 @@ const PatientRecords = () => {
   );
 
   return (
-    <div style={{ padding: 24, background: colors.gray50, minHeight: '100vh' }}>
-      {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800, margin: 0 }}>
-          Patient Records
-        </h1>
-        <p style={{ fontSize: 16, color: colors.gray600, margin: '4px 0 0 0' }}>
-          Manage and view patient information
-        </p>
-      </div>
+    <div style={{ background: colors.gray50, minHeight: '100vh', padding: '2rem 0' }}>
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          background: colors.blue50,
+          borderRadius: 12,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          border: `1px solid ${colors.gray200}`,
+          padding: 24,
+          marginBottom: 24,
+        }}>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800, margin: 0 }}>
+            Patient Records
+          </h1>
+          <p style={{ fontSize: 16, color: colors.gray600, margin: '4px 0 0 0' }}>
+            Manage and view patient information
+          </p>
+        </div>
 
-      {/* Search and Filters */}
-      <div style={{
-        background: '#fff',
-        borderRadius: 16,
-        padding: 24,
-        marginBottom: 24,
-        border: `1px solid ${colors.gray200}`,
-      }}>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ flex: 1, minWidth: 300 }}>
-            <div style={{ position: 'relative' }}>
-              <Search size={20} color={colors.gray400} style={{
-                position: 'absolute',
-                left: 12,
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }} />
-              <input
-                type="text"
-                placeholder="Search patients by name or condition..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+        {/* Search and Filters */}
+        <div style={{
+          background: colors.gray50,
+          borderRadius: 16,
+          padding: 24,
+          marginBottom: 24,
+          border: `1px solid ${colors.gray200}`,
+        }}>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', width: '100%' }}>
+            <div style={{ flex: '0 1 320px', minWidth: 200, maxWidth: 320 }}>
+              <div style={{ position: 'relative' }}>
+                <Search size={20} color={colors.gray400} style={{
+                  position: 'absolute',
+                  left: 12,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }} />
+                <input
+                  type="text"
+                  placeholder="Search patients by name or condition..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 12px 12px 44px',
+                    border: `1px solid ${colors.gray300}`,
+                    borderRadius: 12,
+                    fontSize: 14,
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => e.target.style.borderColor = colors.primary}
+                  onBlur={e => e.target.style.borderColor = colors.gray300}
+                />
+              </div>
+            </div>
+            <div style={{ width: '100%', maxWidth: 220 }}>
+              <select
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 12px 12px 44px',
+                  padding: '12px 16px',
                   border: `1px solid ${colors.gray300}`,
                   borderRadius: 12,
                   fontSize: 14,
+                  background: '#fff',
+                  cursor: 'pointer',
                   outline: 'none',
-                  transition: 'border-color 0.2s',
                 }}
-                onFocus={e => e.target.style.borderColor = colors.primary}
-                onBlur={e => e.target.style.borderColor = colors.gray300}
-              />
+              >
+                <option value="all">All Patients</option>
+                <option value="high">High Risk</option>
+                <option value="medium">Medium Risk</option>
+                <option value="low">Low Risk</option>
+                <option value="chronic">Chronic Conditions</option>
+              </select>
             </div>
-          </div>
-
-          <select
-            value={selectedFilter}
-            onChange={(e) => setSelectedFilter(e.target.value)}
-            style={{
-              padding: '12px 16px',
-              border: `1px solid ${colors.gray300}`,
+            <button style={{
+              padding: '12px 20px',
               borderRadius: 12,
+              border: 'none',
+              background: colors.primary,
+              color: 'white',
               fontSize: 14,
-              background: '#fff',
+              fontWeight: 600,
               cursor: 'pointer',
-              outline: 'none',
-            }}
-          >
-            <option value="all">All Patients</option>
-            <option value="high">High Risk</option>
-            <option value="medium">Medium Risk</option>
-            <option value="low">Low Risk</option>
-            <option value="chronic">Chronic Conditions</option>
-          </select>
-
-          <button style={{
-            padding: '12px 20px',
-            borderRadius: 12,
-            border: 'none',
-            background: colors.primary,
-            color: 'white',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-          }}>
-            <Plus size={16} />
-            New Patient
-          </button>
-
-          <button style={{
-            padding: '12px 16px',
-            borderRadius: 12,
-            border: `1px solid ${colors.gray300}`,
-            background: '#fff',
-            color: colors.gray600,
-            fontSize: 14,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-          }}>
-            <Upload size={16} />
-            Import
-          </button>
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              <Plus size={16} />
+              New Patient
+            </button>
+            <button style={{
+              padding: '12px 16px',
+              borderRadius: 12,
+              border: `1px solid ${colors.gray300}`,
+              background: '#fff',
+              color: colors.gray600,
+              fontSize: 14,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              <Upload size={16} />
+              Import
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Results Count */}
-      <div style={{ marginBottom: 20 }}>
-        <span style={{ fontSize: 14, color: colors.gray600 }}>
-          Showing {filteredPatients.length} of {patients.length} patients
-        </span>
-      </div>
+        {/* Results Count */}
+        <div style={{ marginBottom: 20 }}>
+          <span style={{ fontSize: 14, color: colors.gray600 }}>
+            Showing {filteredPatients.length} of {patients.length} patients
+          </span>
+        </div>
 
-      {/* Patient Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-        gap: 24,
-      }}>
-        {filteredPatients.map((patient) => (
-          <PatientCard key={patient.id} patient={patient} />
-        ))}
-      </div>
-
-      {filteredPatients.length === 0 && (
+        {/* Patient Grid */}
         <div style={{
-          textAlign: 'center',
-          padding: 60,
-          color: colors.gray500,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
+          gap: 24,
         }}>
-          <User size={48} color={colors.gray300} style={{ marginBottom: 16 }} />
-          <p style={{ fontSize: 18, marginBottom: 8 }}>No patients found</p>
-          <p style={{ fontSize: 14 }}>Try adjusting your search terms or filters</p>
+          {filteredPatients.map((patient) => (
+            <PatientCard key={patient.id} patient={patient} />
+          ))}
         </div>
-      )}
 
-      {/* Patient Detail Modal */}
-      {selectedPatient && (
-        <PatientDetailModal
-          patient={selectedPatient}
-          onClose={() => setSelectedPatient(null)}
-        />
-      )}
+        {filteredPatients.length === 0 && (
+          <div style={{
+            textAlign: 'center',
+            padding: 60,
+            color: colors.gray500,
+          }}>
+            <User size={48} color={colors.gray300} style={{ marginBottom: 16 }} />
+            <p style={{ fontSize: 18, marginBottom: 8 }}>No patients found</p>
+            <p style={{ fontSize: 14 }}>Try adjusting your search terms or filters</p>
+          </div>
+        )}
+
+        {/* Patient Detail Modal */}
+        {selectedPatient && (
+          <PatientDetailModal
+            patient={selectedPatient}
+            onClose={() => setSelectedPatient(null)}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -230,197 +230,237 @@ const AnalyticsView = () => {
   );
 
   return (
-    <div style={{ 
-      padding: 24,
-      background: colors.gray50,
-      minHeight: '100vh'
+    <div style={{
+      minHeight: '100vh',
+      background: '#f9fafb',
+      display: 'flex',
+      flexDirection: 'row',
     }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: 24
-      }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800 }}>Practice Analytics</h1>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button style={{
-            padding: '8px 16px',
-            borderRadius: 8,
-            border: `1px solid ${colors.gray300}`,
-            background: colors.white,
-            color: colors.gray700,
-            fontSize: 14,
-            fontWeight: 500,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
-          }}>
-            <Filter size={16} />
-            Filters
-          </button>
-          <button style={{
-            padding: '8px 16px',
-            borderRadius: 8,
-            border: `1px solid ${colors.gray300}`,
-            background: colors.white,
-            color: colors.gray700,
-            fontSize: 14,
-            fontWeight: 500,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
-          }}>
-            <Download size={16} />
-            Export
-          </button>
-        </div>
-      </div>
-
-      <TimeRangeFilter />
-
-      {/* Overview Stats */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: 16,
-        marginBottom: 24
-      }}>
-        <StatCard 
-          title="Total Patients" 
-          value={patientStats.totalPatients} 
-          change={`+${patientStats.growthRate}%`} 
-          icon={<Users size={18} />}
-          trend="up"
-        />
-        <StatCard 
-          title="New This Month" 
-          value={patientStats.newThisMonth} 
-          change="+8 from last month" 
-          icon={<TrendingUp size={18} />}
-          trend="up"
-          bgColor={colors.blue50}
-        />
-        <StatCard 
-          title="Active Patients" 
-          value={patientStats.activePatients} 
-          change={`${Math.round((patientStats.activePatients / patientStats.totalPatients) * 100)}% of total`} 
-          icon={<Activity size={18} />}
-        />
-        <StatCard 
-          title="Avg Consultations" 
-          value={consultationStats.monthlyAverage} 
-          change={`${consultationStats.avgDuration} avg duration`} 
-          icon={<Clock size={18} />}
-          bgColor={colors.green50}
-        />
-      </div>
-
-      {/* Secondary Charts */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: 24
-      }}>
+      {/* Sidebar could go here if needed for navigation */}
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+      >
+        {/* Header section with blue background, rounded, shadow, border */}
         <div style={{
-          background: colors.white,
-          borderRadius: 12,
-          padding: 16,
-          border: `1px solid ${colors.gray200}`,
+          background: '#e0f2fe',
+          borderRadius: 32,
+          padding: '2rem',
+          marginBottom: '2rem',
+          color: '#1e293b',
+          position: 'relative',
+          overflow: 'visible',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+          border: '1.5px solid #d1d5db'
         }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: colors.gray800, marginBottom: 16 }}>
-            Common Conditions
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ 
-              width: 180, 
-              height: 180, 
-              borderRadius: '50%',
-              background: `conic-gradient(
-                ${conditionStats[0].color} 0% ${conditionStats[0].value}%,
-                ${conditionStats[1].color} 0% ${conditionStats[0].value + conditionStats[1].value}%,
-                ${conditionStats[2].color} 0% ${conditionStats[0].value + conditionStats[1].value + conditionStats[2].value}%,
-                ${conditionStats[3].color} 0% ${conditionStats[0].value + conditionStats[1].value + conditionStats[2].value + conditionStats[3].value}%,
-                ${conditionStats[4].color} 0% 100%
-              )`
-            }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, marginBottom: '0.5rem' }}>
+                Practice Analytics
+              </h1>
+              <p style={{ fontSize: '1.1rem', opacity: 0.9, margin: 0, marginBottom: '1.5rem' }}>
+                Visualize your practice's performance and patient trends
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button style={{
+                padding: '12px 20px',
+                borderRadius: 12,
+                border: 'none',
+                background: '#3b82f6',
+                color: 'white',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                transition: 'background 0.2s'
+              }}>
+                <Filter size={18} />
+                Filters
+              </button>
+              <button style={{
+                padding: '12px 20px',
+                borderRadius: 12,
+                border: 'none',
+                background: '#f3e8ff',
+                color: '#3b82f6',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                transition: 'background 0.2s'
+              }}>
+                <Download size={18} />
+                Export
+              </button>
+            </div>
           </div>
-          <PieChartLegend data={conditionStats} />
         </div>
 
+        {/* Overview Stats - single row, horizontally scrollable on small screens */}
         <div style={{
-          background: colors.white,
-          borderRadius: 12,
-          padding: 16,
-          border: `1px solid ${colors.gray200}`,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 24,
+          marginBottom: 32,
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: 8,
         }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: colors.gray800, marginBottom: 16 }}>
-            Gender Distribution
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ 
-              width: 180, 
-              height: 180, 
-              borderRadius: '50%',
-              background: `conic-gradient(
-                ${genderDistribution[0].color} 0% ${genderDistribution[0].value}%,
-                ${genderDistribution[1].color} 0% ${genderDistribution[0].value + genderDistribution[1].value}%,
-                ${genderDistribution[2].color} 0% 100%
-              )`
-            }} />
-          </div>
-          <PieChartLegend data={genderDistribution} />
+          <StatCard
+            title="Total Patients"
+            value={patientStats.totalPatients}
+            change={`+${patientStats.growthRate}%`}
+            icon={<Users size={18} />}
+            trend="up"
+            bgColor="#fff"
+          />
+          <StatCard
+            title="New This Month"
+            value={patientStats.newThisMonth}
+            change="+8 from last month"
+            icon={<TrendingUp size={18} />}
+            trend="up"
+            bgColor="#e0f2fe"
+          />
+          <StatCard
+            title="Active Patients"
+            value={patientStats.activePatients}
+            change={`${Math.round((patientStats.activePatients / patientStats.totalPatients) * 100)}% of total`}
+            icon={<Activity size={18} />}
+            bgColor="#fff"
+          />
+          <StatCard
+            title="Avg Consultations"
+            value={consultationStats.monthlyAverage}
+            change={`${consultationStats.avgDuration} avg duration`}
+            icon={<Clock size={18} />}
+            bgColor="#ecfdf5"
+          />
         </div>
 
+        {/* Secondary Charts */}
         <div style={{
-          background: colors.white,
-          borderRadius: 12,
-          padding: 16,
-          border: `1px solid ${colors.gray200}`,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 32
         }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: colors.gray800, marginBottom: 16 }}>
-            Consultation Types
-          </h3>
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: 12,
-            marginTop: 24
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            padding: 32,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            border: '1px solid #e5e7eb',
           }}>
-            {consultationTypes.map((type, index) => (
-              <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  background: type.color,
-                  marginRight: 12
-                }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: 14, color: colors.gray700 }}>{type.name}</span>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: colors.gray800 }}>
-                      {type.value}
-                    </span>
-                  </div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', marginBottom: 24 }}>
+              Common Conditions
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{
+                width: 180,
+                height: 180,
+                borderRadius: '50%',
+                background: `conic-gradient(
+                  ${conditionStats[0].color} 0% ${conditionStats[0].value}%,
+                  ${conditionStats[1].color} 0% ${conditionStats[0].value + conditionStats[1].value}%,
+                  ${conditionStats[2].color} 0% ${conditionStats[0].value + conditionStats[1].value + conditionStats[2].value}%,
+                  ${conditionStats[3].color} 0% ${conditionStats[0].value + conditionStats[1].value + conditionStats[2].value + conditionStats[3].value}%,
+                  ${conditionStats[4].color} 0% 100%
+                )`
+              }} />
+            </div>
+            <PieChartLegend data={conditionStats} />
+          </div>
+
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            padding: 32,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            border: '1px solid #e5e7eb',
+          }}>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', marginBottom: 24 }}>
+              Gender Distribution
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{
+                width: 180,
+                height: 180,
+                borderRadius: '50%',
+                background: `conic-gradient(
+                  ${genderDistribution[0].color} 0% ${genderDistribution[0].value}%,
+                  ${genderDistribution[1].color} 0% ${genderDistribution[0].value + genderDistribution[1].value}%,
+                  ${genderDistribution[2].color} 0% 100%
+                )`
+              }} />
+            </div>
+            <PieChartLegend data={genderDistribution} />
+          </div>
+
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            padding: 32,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            border: '1px solid #e5e7eb',
+          }}>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', marginBottom: 24 }}>
+              Consultation Types
+            </h3>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+              marginTop: 24
+            }}>
+              {consultationTypes.map((type, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{
-                    height: 8,
-                    background: colors.gray200,
-                    borderRadius: 4,
-                    marginTop: 4,
-                    overflow: 'hidden'
-                  }}>
+                    width: 12,
+                    height: 12,
+                    borderRadius: '50%',
+                    background: type.color,
+                    marginRight: 12
+                  }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 15, color: '#1e293b' }}>{type.name}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: '#1e293b' }}>
+                        {type.value}
+                      </span>
+                    </div>
                     <div style={{
-                      width: `${(type.value / consultationStats.totalConsultations) * 100}%`,
-                      height: '100%',
-                      background: type.color,
-                      borderRadius: 4
-                    }} />
+                      height: 10,
+                      background: '#e5e7eb',
+                      borderRadius: 5,
+                      marginTop: 6,
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        width: `${(type.value / consultationStats.totalConsultations) * 100}%`,
+                        height: '100%',
+                        background: type.color,
+                        borderRadius: 5
+                      }} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

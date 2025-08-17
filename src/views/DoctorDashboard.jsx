@@ -553,9 +553,40 @@ const DoctorDashboard = () => {
     mainContent = <DocEmergencyView />;
   } else {
     mainContent = (
-      <div style={{ padding: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800 }}>Doctor Dashboard</h1>
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '32px auto',
+          width: '100%',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          background: colors.blue50,
+          borderRadius: 12,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          border: `1px solid ${colors.gray200}`,
+          padding: 24,
+          marginBottom: 24,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: colors.gray800, margin: 0 }}>Doctor Dashboard</h1>
           <button
             onClick={() => { window.location.href = '/'; }}
             style={{
@@ -563,12 +594,13 @@ const DoctorDashboard = () => {
               color: 'white',
               border: 'none',
               borderRadius: 8,
-              padding: '10px 28px',
+              padding: '10px 22px',
               fontWeight: 600,
               fontSize: 15,
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(59,130,246,0.08)',
+              boxShadow: '0 1px 2px 0 rgba(59,130,246,0.10)',
               transition: 'background 0.2s',
+              marginLeft: 16,
             }}
             onMouseEnter={e => e.currentTarget.style.background = colors.primaryHover}
             onMouseLeave={e => e.currentTarget.style.background = colors.primary}
@@ -576,11 +608,22 @@ const DoctorDashboard = () => {
             Logout
           </button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, margin: '32px 0' }}>
+        {/* Stat Cards */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 16,
+            marginBottom: 24,
+            overflowX: 'auto',
+            minWidth: 0,
+          }}
+        >
           {todayStats.map((stat, idx) => (
             <StatCard key={idx} stat={stat} />
           ))}
         </div>
+        {/* Main Content */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32 }}>
           <div style={{ flex: 2, minWidth: 320 }}>
             <h2 style={{ fontSize: 20, fontWeight: 600, color: colors.gray700, marginBottom: 16 }}>Upcoming Appointments</h2>
