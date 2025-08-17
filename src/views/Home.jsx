@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DoctorDashboard from "./DoctorDashboard";
+import SignupPage from "./SignupPage";
 
 const styles = `
   :root {
@@ -154,7 +155,7 @@ const styles = `
 
 const ussdMenus = {
   main: {
-    text: `Welcome to HealthGPT SA\n1. Book Clinic\n2. Med Reminders\n3. Health Tips\n4. Emergency\n0. Exit`,
+  text: `Welcome to MzansiCare\n1. Book Clinic\n2. Med Reminders\n3. Health Tips\n4. Emergency\n0. Exit`,
     options: {
       '1': (session) => { session.currentMenu = 'clinics'; return ussdMenus.clinics.text; },
       '2': (session) => { session.currentMenu = 'medication_name'; return 'Enter med name:'; },
@@ -496,13 +497,15 @@ const USSD = ({ onExit }) => {
 };
 
 const Home = ({ onPatientRegister }) => {
-  const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode] = useState('login');
+  // Already declared above, remove duplicate declarations
   const [userRole, setUserRole] = useState('patient');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showUSSD, setShowUSSD] = useState(false);
   const [doctorLoggedIn, setDoctorLoggedIn] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const [showSignup, setShowSignup] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -528,16 +531,16 @@ const Home = ({ onPatientRegister }) => {
       <div className="login-outer">
         <div className="login-container">
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <h1 style={{ color: "var(--primary)", marginBottom: 8 }}>Healthcare ARM System</h1>
-            <p className="text-muted">Secure, AI-powered healthcare management</p>
+            <h1 style={{ color: "var(--primary)", marginBottom: 8 }}>MzansiCare</h1>
+            <p className="text-muted">Healthcare that speaks your language—anytime, anywhere</p>
           </div>
           <div className="login-options">
             <InteractiveDiv
               className="login-option"
-              onClick={() => { setUserRole('patient'); setAuthMode('register'); setShowAuth(true); }}
+              onClick={() => { setUserRole('patient'); setAuthMode('login'); setShowAuth(true); }}
             >
               <span className="material-icons">person</span>
-              <h3>Patient Portal</h3>
+              <h3>Login as Patient</h3>
               <p>Book appointments, view medical records, and message your doctor</p>
             </InteractiveDiv>
             <InteractiveDiv
@@ -569,25 +572,77 @@ const Home = ({ onPatientRegister }) => {
           </div>
         </div>
       </div>
-      {showAuth && (
+      {showAuth && userRole === 'patient' && (
         <div style={{
-          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.4)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(44,62,80,0.18)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(1px)'
         }}>
-          <form onSubmit={handleSubmit} style={{ background: 'white', borderRadius: 16, padding: 32, minWidth: 320, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}>
-            <h2 style={{ marginBottom: 18 }}>{authMode === 'register' ? 'Register' : 'Login'} as {userRole.charAt(0).toUpperCase() + userRole.slice(1)}</h2>
+          <form onSubmit={handleSubmit} style={{ background: 'white', borderRadius: 18, padding: 36, minWidth: 340, maxWidth: 420, boxShadow: '0 8px 32px rgba(44,62,80,0.18)', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 24 }}>
+              <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1976d2', marginBottom: 8 }}>Login as Patient</h2>
+            </div>
             <div className="form-group">
               <label className="form-label" htmlFor="username">Username</label>
-              <input className="form-control" id="username" name="username" type="text" autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required />
+              <input className="form-control" id="username" name="username" type="text" autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required style={{ fontSize: 16 }} />
             </div>
             <div className="form-group">
               <label className="form-label" htmlFor="password">Password</label>
-              <input className="form-control" id="password" name="password" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required />
+              <input className="form-control" id="password" name="password" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required style={{ fontSize: 16 }} />
             </div>
-            <div style={{ display: 'flex', gap: 12, marginTop: 18 }}>
-              <button type="button" className="btn btn-outlined" onClick={() => setShowAuth(false)}>Cancel</button>
-              <button type="submit" className="btn btn-primary">{authMode === 'register' ? 'Register' : 'Login'}</button>
+            <div style={{ display: 'flex', gap: 14, marginTop: 22 }}>
+              <button type="button" className="btn btn-outlined" style={{ flex: 1, fontSize: 16, padding: '10px 0' }} onClick={() => setShowAuth(false)}>Cancel</button>
+              <button type="submit" className="btn btn-primary" style={{ flex: 1, fontSize: 16, padding: '10px 0' }}>Login</button>
+            </div>
+            <div style={{ marginTop: 22, textAlign: 'center' }}>
+              <span style={{ color: '#666', fontSize: 15 }}>Don't have an account? </span>
+              <a href="#" style={{ color: '#1976d2', fontWeight: 600, textDecoration: 'underline', fontSize: 15 }}
+                onClick={e => {
+                  e.preventDefault();
+                  setShowAuth(false);
+                  setTimeout(() => setShowSignup(true), 10); // Ensure modal opens after login closes
+                }}
+              >Sign up</a>
             </div>
           </form>
+        </div>
+      )}
+
+      {showAuth && userRole === 'doctor' && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(44,62,80,0.18)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(1px)'
+        }}>
+          <form onSubmit={e => { e.preventDefault(); setDoctorLoggedIn(true); setShowAuth(false); }} style={{ background: 'white', borderRadius: 18, padding: 36, minWidth: 340, maxWidth: 420, boxShadow: '0 8px 32px rgba(44,62,80,0.18)', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 24 }}>
+              <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1976d2', marginBottom: 8 }}>Doctor Portal Login</h2>
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="doctorUsername">Username</label>
+              <input className="form-control" id="doctorUsername" name="doctorUsername" type="text" autoComplete="username" required style={{ fontSize: 16 }} />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="doctorPassword">Password</label>
+              <input className="form-control" id="doctorPassword" name="doctorPassword" type="password" autoComplete="current-password" required style={{ fontSize: 16 }} />
+            </div>
+            <div style={{ display: 'flex', gap: 14, marginTop: 22 }}>
+              <button type="button" className="btn btn-outlined" style={{ flex: 1, fontSize: 16, padding: '10px 0' }} onClick={() => setShowAuth(false)}>Cancel</button>
+              <button type="submit" className="btn btn-primary" style={{ flex: 1, fontSize: 16, padding: '10px 0' }}>Login</button>
+            </div>
+          </form>
+        </div>
+      )}
+      {showSignup && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(44, 62, 80, 0.7)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s', backdropFilter: 'blur(2px)'
+        }}>
+          <div style={{ background: 'white', borderRadius: 24, padding: 40, minWidth: 340, maxWidth: 480, boxShadow: '0 8px 32px rgba(44,62,80,0.18)', position: 'relative', animation: 'fadeIn 0.3s', border: '2px solid #6c63ff' }}>
+            <button style={{ position: 'absolute', top: 18, right: 18, background: 'none', border: 'none', fontSize: 32, color: '#6c63ff', cursor: 'pointer', zIndex: 10 }} aria-label="Close Signup" onClick={() => setShowSignup(false)}>×</button>
+            <SignupPage />
+          </div>
+          <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: scale(0.95); }
+              to { opacity: 1; transform: scale(1); }
+            }
+          `}</style>
         </div>
       )}
       {showUSSD && (

@@ -84,7 +84,7 @@ const ClinicCard = ({ clinic, t, onBookAppointment }) => (
       </button>
       <button style={{
         background: 'white',
-        color: '#3b82f6',
+                background: '#bae6fd', // light blue
         border: '1px solid #3b82f6',
         borderRadius: 8,
         padding: '8px 16px',
@@ -260,8 +260,8 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
           boxShadow: '0 20px 40px rgba(0,0,0,0.15)'
         }}>
           <div style={{
-            background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-            color: 'white',
+            background: '#bae6fd', // light blue
+            color: '#111827', // blackish
             padding: 24,
             borderRadius: '16px 16px 0 0',
             display: 'flex',
@@ -269,8 +269,8 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
             justifyContent: 'space-between'
           }}>
             <div>
-              <h2 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 8 }}>Book Appointment</h2>
-              <p style={{ opacity: 0.9 }}>{clinic?.name}</p>
+              <h2 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 8, color: '#111827' }}>Book Appointment</h2>
+              <p style={{ opacity: 0.9, color: '#111827', fontWeight: 500 }}>{clinic?.name}</p>
             </div>
             <button
               type="button"
@@ -576,49 +576,49 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
   const [filterType, setFilterType] = useState('');
   const [appointments, setAppointments] = useState([
     {
-      clinic: 'KwaMashu PHC Clinic',
+      clinic: 'Hillbrow Community Health Centre',
       type: 'Video Consultation',
       date: 'Tomorrow',
       time: '10:00 AM',
       status: 'confirmed',
-      doctor: 'Dr. Mkhize',
+      doctor: 'Dr. Mokoena',
       specialty: 'General Practice',
     },
     {
-      clinic: 'Inanda Health Centre',
+      clinic: 'Charlotte Maxeke Johannesburg Academic Hospital',
       type: 'In-Person',
-      date: 'Mon, 25 Jun',
+      date: 'Mon, 25 Aug',
       time: '2:30 PM',
       status: 'pending',
-      doctor: 'Dr. Dlamini',
+      doctor: 'Dr. Nkosi',
       specialty: 'Cardiology',
     },
   ]);
 
   const [clinics] = useState([
     {
-      name: 'KwaMashu PHC Clinic',
-      address: '123 Main St',
-      phone: '031 123 4567',
-      distance: '2.3 km',
+      name: 'Hillbrow Community Health Centre',
+      address: '32 Klein St, Hillbrow, Johannesburg',
+      phone: '011 488 3000',
+      distance: '1.2 km',
       waitTime: 'Available',
       services: ['General', 'TB', 'Maternity'],
       rating: 4.8,
     },
     {
-      name: 'Inanda Health Centre',
-      address: '456 Inanda Rd',
-      phone: '031 234 5678',
-      distance: '3.7 km',
+      name: 'Charlotte Maxeke Johannesburg Academic Hospital',
+      address: '17 Jubilee Rd, Parktown, Johannesburg',
+      phone: '011 488 4911',
+      distance: '3.5 km',
       waitTime: '15 mins',
       services: ['General', 'HIV', 'Mental Health'],
       rating: 4.6,
     },
     {
-      name: 'Phoenix CHC',
-      address: '789 Phoenix Ave',
-      phone: '031 345 6789',
-      distance: '5.1 km',
+      name: 'South Rand Hospital',
+      address: '1 Friars Hill Rd, Rosettenville, Johannesburg',
+      phone: '011 681 2000',
+      distance: '6.0 km',
       waitTime: '25 mins',
       services: ['General', 'Dental', 'X-Ray'],
       rating: 4.4,
@@ -657,44 +657,90 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div style={{ flex: 1, padding: '2rem 2.5vw', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
-        <div 
-          style={{ 
-            background: 'white', 
-            borderRadius: 16, 
-            boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', 
-            border: '1px solid #e5e7eb', 
-            padding: 24,
+    <>
+      <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
+        <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <div
+          style={{
+            flex: 1,
+            padding: '2rem 2.5vw',
+            maxWidth: 1200,
+            margin: '0 auto',
+            width: '100%',
+            background: '#fff',
+            borderRadius: 18,
+            boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+            transition: 'box-shadow 0.2s, transform 0.2s',
+            position: 'relative',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+            e.currentTarget.style.transform = 'none';
           }}
         >
-          <h2 style={{ fontSize: 22, fontWeight: 'bold', color: '#1e293b', marginBottom: 24, display: 'flex', alignItems: 'center' }}>
-            <Calendar size={24} style={{ marginRight: 8, color: '#2563eb' }} />
-            {t.appointments}
-          </h2>
+          {/* Header - styled like HealthLibraryView */}
+          <div style={{
+            background: '#e0f2fe',
+            borderRadius: 32,
+            padding: '2rem',
+            marginBottom: '2rem',
+            color: '#1e293b',
+            position: 'relative',
+            overflow: 'visible',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+            border: '1.5px solid #d1d5db'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, marginBottom: '0.5rem' }}>
+                  <Calendar size={32} style={{ marginRight: 12, color: '#2563eb', verticalAlign: 'middle' }} />
+                  {t.appointments}
+                </h2>
+                <p style={{ fontSize: '1.1rem', opacity: 0.9, margin: 0, marginBottom: '1.5rem' }}>
+                  Manage and book your healthcare appointments easily
+                </p>
+              </div>
+            </div>
+          </div>
 
-          {/* Quick Actions */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 24, alignItems: 'center', padding: 16, borderRadius: 12 }}>
+          {/* Quick Actions - styled like HealthLibraryView's tab bar */}
+          <div style={{
+            background: 'white',
+            borderRadius: 16,
+            padding: '0.5rem',
+            marginBottom: '2rem',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            display: 'flex',
+            gap: '0.5rem',
+            alignItems: 'center'
+          }}>
             <button
               onClick={() => setShowBookingModal(true)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
+                flex: 1,
                 background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                 color: 'white',
                 border: 'none',
-                borderRadius: 8,
-                padding: '12px 20px',
-                fontSize: 14,
+                borderRadius: 12,
+                padding: '1rem',
+                fontSize: 15,
                 fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'transform 0.2s'
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 2px 8px rgba(59,130,246,0.08)'
               }}
-              onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
-              onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+              onMouseEnter={e => e.target.style.filter = 'brightness(1.08)'}
+              onMouseLeave={e => e.target.style.filter = 'none'}
             >
-              <Plus size={16} style={{ marginRight: 8 }} />
+              <Plus size={18} style={{ marginRight: 8 }} />
               Quick Book
             </button>
             <div style={{ flex: 2, minWidth: 220, maxWidth: 400 }}>
@@ -717,7 +763,8 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
                     border: '2px solid #e5e7eb',
                     borderRadius: 8,
                     fontSize: 14,
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    background: '#f9fafb'
                   }}
                 />
               </div>
@@ -733,7 +780,8 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
                   borderRadius: 8,
                   fontSize: 14,
                   minWidth: 150,
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  background: '#f9fafb'
                 }}
               >
                 <option value="">All Services</option>
@@ -747,69 +795,90 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
             </div>
           </div>
 
-          {/* Upcoming Appointments */}
+          {/* Upcoming Appointments - styled like HealthLibraryView's cards */}
           <div style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 16 }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
               Upcoming Appointments
             </h3>
-            <div style={{ display: 'grid', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
               {appointments.length > 0 ? (
                 appointments.map((appointment, index) => (
-                  <AppointmentCard key={index} appointment={appointment} t={t} />
+                  <div key={index} style={{
+                    background: 'white',
+                    borderRadius: 16,
+                    padding: '1.5rem',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                    transition: 'all 0.2s',
+                    border: appointment.status === 'confirmed' ? '2px solid #10b981' : appointment.status === 'pending' ? '2px solid #fbbf24' : 'none',
+                    position: 'relative'
+                  }}>
+                    <AppointmentCard appointment={appointment} t={t} />
+                  </div>
                 ))
               ) : (
                 <div style={{ 
                   background: 'white', 
-                  borderRadius: 12, 
-                  padding: 24, 
+                  borderRadius: 16, 
+                  padding: '2rem', 
                   border: '1px dashed #e5e7eb',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  color: '#6b7280',
+                  fontSize: '1.1rem'
                 }}>
-                  <p style={{ color: '#6b7280' }}>No upcoming appointments. Book one now!</p>
+                  No upcoming appointments. Book one now!
                 </div>
               )}
             </div>
           </div>
 
-          {/* Nearby Clinics */}
+          {/* Nearby Clinics - styled like HealthLibraryView's cards */}
           <div>
-            <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 16 }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem' }}>
               Nearby Clinics
             </h3>
-            <div style={{ display: 'grid', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
               {filteredClinics.length > 0 ? (
                 filteredClinics.map((clinic, index) => (
-                  <ClinicCard 
-                    key={index} 
-                    clinic={clinic} 
-                    t={t} 
-                    onBookAppointment={handleBookAppointment} 
-                  />
+                  <div key={index} style={{
+                    background: 'white',
+                    borderRadius: 16,
+                    padding: '1.5rem',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                    transition: 'all 0.2s',
+                    border: '1.5px solid #bae6fd',
+                    position: 'relative'
+                  }}>
+                    <ClinicCard 
+                      clinic={clinic} 
+                      t={t} 
+                      onBookAppointment={handleBookAppointment} 
+                    />
+                  </div>
                 ))
               ) : (
                 <div style={{ 
                   background: 'white', 
-                  borderRadius: 12, 
-                  padding: 24, 
+                  borderRadius: 16, 
+                  padding: '2rem', 
                   border: '1px dashed #e5e7eb',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  color: '#6b7280',
+                  fontSize: '1.1rem'
                 }}>
-                  <p style={{ color: '#6b7280' }}>No clinics match your search criteria</p>
+                  No clinics match your search criteria
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Booking Modal */}
       <BookingModal
         isOpen={showBookingModal}
         onClose={() => setShowBookingModal(false)}
         clinic={selectedClinic || clinics[0]}
         onSubmit={handleBookingSubmit}
       />
-    </div>
+    </>
   );
 };
 

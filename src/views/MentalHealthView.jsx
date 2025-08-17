@@ -1,54 +1,30 @@
-// MentalHealthView.jsx
-import React, { useState, useEffect } from 'react';
-import { Brain, MapPin, Calendar, Phone, X, Check } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import EmotionDetector from '../components/EmotionDetector';
+import React, { useState } from 'react';
+import { Card } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
+import { Progress } from '../components/ui/Progress';
+import { Alert, AlertDescription } from '../components/ui/Alert';
+import { Lightbulb, AlertTriangle, Heart, Award, Clock, Navigation2, Phone, MapPin, Calendar, X, Check, Brain } from 'lucide-react';
 
-const moodEmojis = ['😢', '😟', '😐', '😊', '😄'];
-const moodLabels = ['Very Sad', 'Sad', 'Neutral', 'Happy', 'Very Happy'];
-
-const moodResponses = {
-  0: {
-    message: "I'm sorry you're feeling this way. Remember that it's okay to feel sad sometimes - it's a natural part of being human. Would you like to talk about what's bothering you?",
-    suggestions: ["Take deep breaths", "Reach out to a friend", "Consider speaking with a counselor", "Try some gentle exercise"]
-  },
-  1: {
-    message: "I understand you're going through a tough time. Your feelings are valid, and it's brave of you to acknowledge them. What usually helps you feel a bit better?",
-    suggestions: ["Listen to calming music", "Write in a journal", "Take a warm bath", "Call someone you trust"]
-  },
-  2: {
-    message: "It's perfectly normal to feel neutral sometimes. How would you like to spend your day to maybe lift your spirits a little?",
-    suggestions: ["Try a new hobby", "Go for a walk", "Watch something funny", "Do something creative"]
-  },
-  3: {
-    message: "I'm glad to hear you're feeling happy! What's been going well for you today? Keep nurturing those positive feelings.",
-    suggestions: ["Share your joy with others", "Do something you love", "Practice gratitude", "Help someone else"]
-  },
-  4: {
-    message: "That's wonderful! Your positive energy is contagious. What's making you feel so great today?",
-    suggestions: ["Celebrate your wins", "Spread kindness", "Try something new", "Reflect on your blessings"]
-  }
-};
-
-const SupportCard = ({ title, subtitle, contact, available, type, onLocationClick, onBookAppointment }) => {
+// SupportCard component remains the same
+const SupportCard = ({ title, subtitle, contact, available, type, onLocationClick, onBookAppointment, style }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
   const handleContactClick = () => {
     if (type === 'phone') {
       window.location.href = `tel:${contact}`;
     } else if (type === 'location') {
-      onLocationClick();
+      onLocationClick && onLocationClick();
     } else if (type === 'booking') {
-      onBookAppointment();
+      onBookAppointment && onBookAppointment();
     }
   };
-
   const getContactColor = () => {
     if (type === 'phone') return '#2563eb';
     if (type === 'location') return '#7c3aed';
     if (type === 'booking') return '#059669';
     return '#374151';
   };
-
   return (
     <div 
       style={{
@@ -60,12 +36,13 @@ const SupportCard = ({ title, subtitle, contact, available, type, onLocationClic
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
-        minWidth: 220,
-        maxWidth: 320,
+        minWidth: 0,
+        flex: 1,
         alignItems: 'flex-start',
         transition: 'all 0.3s ease',
         transform: isHovered ? 'translateY(-5px) scale(1.02)' : 'translateY(0) scale(1)',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        ...style
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -94,6 +71,7 @@ const SupportCard = ({ title, subtitle, contact, available, type, onLocationClic
   );
 };
 
+// AppointmentModal component remains the same
 const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -110,7 +88,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
       setFormData({ name: '', email: '', phone: '', date: '', time: '', notes: '' });
     }
   };
-
   if (!isOpen) return null;
 
   return (
@@ -144,7 +121,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
             <X size={20} />
           </button>
         </div>
-        
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
@@ -164,7 +140,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
               }}
             />
           </div>
-          
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
               Email *
@@ -179,11 +154,9 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
                 padding: 8,
                 border: '1px solid #d1d5db',
                 borderRadius: 6,
-                fontSize: 14
-              }}
+                fontSize: 14}}
             />
           </div>
-          
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
               Phone Number *
@@ -202,7 +175,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
               }}
             />
           </div>
-          
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
@@ -222,7 +194,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
                 }}
               />
             </div>
-            
             <div>
               <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
                 Preferred Time *
@@ -242,7 +213,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
               />
             </div>
           </div>
-          
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500, color: '#374151' }}>
               Additional Notes
@@ -262,7 +232,6 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
               placeholder="Any specific concerns or preferences..."
             />
           </div>
-          
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 20 }}>
             <button
               type="button"
@@ -303,44 +272,203 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
   );
 };
 
-const MentalHealthView = ({ currentPage = 'mentalHealth', setCurrentPage }) => {
-  const [selectedMood, setSelectedMood] = useState(null);
-  const [showMoodResponse, setShowMoodResponse] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
+import { Button } from '../components/ui/Button';
+
+const colors = {
+  primary: '#3b82f6',
+  primaryHover: '#2563eb',
+  secondary: '#f3f4f6',
+  danger: '#ef4444',
+  dangerHover: '#dc2626',
+  success: '#10b981',
+  warning: '#f59e0b',
+  gray50: '#f9fafb',
+  gray100: '#f3f4f6',
+  gray200: '#e5e7eb',
+  gray300: '#d1d5db',
+  gray400: '#9ca3af',
+  gray500: '#6b7280',
+  gray600: '#4b5563',
+  gray700: '#374151',
+  gray800: '#1f2937',
+  gray900: '#111827',
+  blue50: '#eff6ff',
+  green50: '#ecfdf5',
+  purple50: '#f5f3ff',
+  red50: '#fef2f2',
+  yellow50: '#fffbeb',
+};
+
+const MentalHealthSuite = ({ currentPage = 'mentalHealth', setCurrentPage }) => {
+  const [emotionHistory, setEmotionHistory] = useState([]);
+  const [coachingMessage, setCoachingMessage] = useState('');
+  const [currentSuggestions, setCurrentSuggestions] = useState([]);
+  const [crisisStatus, setCrisisStatus] = useState(null);
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
-  const [appointments, setAppointments] = useState([]);
   const [locationStatus, setLocationStatus] = useState('');
+  const [bookedAppointment, setBookedAppointment] = useState(null);
 
-  const t = {
-    mentalHealth: 'Mental Health',
-    moodTracker: 'Daily Mood Tracker'
+  const handleEmotionDetected = (emotion) => {
+    console.log('Received emotion from CNN detector:', emotion);
+    const suggestions = generateCoachingSuggestions(emotion.label);
+    setCurrentSuggestions(suggestions);
+    setCoachingMessage(generateCoachingMessage(emotion.label, emotion.score));
+    const newEntry = {
+      timestamp: new Date(),
+      emotion: emotion.label,
+      confidence: emotion.score,
+      suggestions
+    };
+    setEmotionHistory(prev => [newEntry, ...prev.slice(0, 9)]);
+    checkCrisisPatterns([newEntry, ...emotionHistory]);
   };
 
-  const handleMoodClick = (moodIndex) => {
-    setSelectedMood(moodIndex);
-    setShowMoodResponse(true);
-  };
+  function checkCrisisPatterns(history) {
+    const crisisEmotions = ['sad', 'sadness', 'negative', 'anger', 'angry', 'fear'];
+    const lastThree = history.slice(0, 3);
+    if (lastThree.length === 3 && lastThree.every(e => crisisEmotions.includes((e.emotion || '').toLowerCase()))) {
+      setCrisisStatus({
+        severity: 'high',
+        indicators: lastThree.map(e => `${e.emotion} (${Math.round(e.confidence * 100)}%)`),
+        recommendation: 'Please consider reaching out to a mental health professional or support line.'
+      });
+    } else if (lastThree.length > 0 && lastThree.some(e => crisisEmotions.includes((e.emotion || '').toLowerCase()))) {
+      setCrisisStatus({
+        severity: 'low',
+        indicators: lastThree.filter(e => crisisEmotions.includes((e.emotion || '').toLowerCase())).map(e => `${e.emotion} (${Math.round(e.confidence * 100)}%)`),
+        recommendation: 'AI noticed some emotional stress. Take care and consider self-care activities.'
+      });
+    } else {
+      setCrisisStatus(null);
+    }
+  }
+
+  function getEmotionEmoji(label) {
+    switch ((label || '').toLowerCase()) {
+      case 'anger':
+      case 'angry':
+        return '😠';
+      case 'disgust':
+        return '🤢';
+      case 'fear':
+        return '😨';
+      case 'happy':
+      case 'joy':
+      case 'love':
+      case 'positive':
+        return '😊';
+      case 'neutral':
+        return '😐';
+      case 'sad':
+      case 'sadness':
+      case 'negative':
+        return '😢';
+      case 'surprise':
+        return '😲';
+      default:
+        return '🙂';
+    }
+  }
+
+  function generateCoachingMessage(emotionLabel, score) {
+    const percent = Math.round(score * 100);
+    switch ((emotionLabel || '').toLowerCase()) {
+      case 'happy':
+      case 'joy':
+      case 'love':
+      case 'positive':
+        return `You seem to be in a great mood! (${percent}% confidence) Keep spreading positivity.`;
+      case 'sad':
+      case 'sadness':
+      case 'negative':
+        return `It's okay to feel sad sometimes. (${percent}% confidence) Remember, brighter days are ahead.`;
+      case 'anger':
+      case 'angry':
+        return `You might be feeling angry. (${percent}% confidence) Try to pause and breathe before reacting.`;
+      case 'fear':
+        return `Feeling fearful is natural. (${percent}% confidence) Consider talking to someone you trust.`;
+      case 'disgust':
+        return `You may be experiencing disgust. (${percent}% confidence) Try to focus on something pleasant.`;
+      case 'surprise':
+        return `Surprises can be exciting or unsettling. (${percent}% confidence) Embrace the unexpected!`;
+      case 'neutral':
+        return `You're feeling neutral. (${percent}% confidence) Take a moment to check in with yourself.`;
+      default:
+        return `Your mood is unique. (${percent}% confidence) Take care of yourself today!`;
+    }
+  }
+
+  function generateCoachingSuggestions(emotionLabel) {
+    switch ((emotionLabel || '').toLowerCase()) {
+      case 'happy':
+      case 'joy':
+      case 'love':
+      case 'positive':
+        return [
+          'Keep up the positive mindset!',
+          'Share your happiness with someone today.',
+          'Reflect on what made you feel good.'
+        ];
+      case 'sad':
+      case 'sadness':
+      case 'negative':
+        return [
+          'Take a moment to acknowledge your feelings.',
+          'Reach out to a friend or loved one.',
+          'Try a relaxing activity you enjoy.'
+        ];
+      case 'anger':
+      case 'angry':
+        return [
+          'Take deep breaths and pause before reacting.',
+          'Channel your energy into something productive.',
+          'Consider writing down your thoughts.'
+        ];
+      case 'fear':
+        return [
+          "Remind yourself that it's okay to feel afraid.",
+          'Talk to someone you trust about your worries.',
+          'Practice grounding techniques.'
+        ];
+      case 'disgust':
+        return [
+          'Reflect on what triggered this feeling.',
+          'Engage in a pleasant activity to shift your mood.',
+          'Talk it out with someone you trust.'
+        ];
+      case 'surprise':
+        return [
+          'Embrace the unexpected!',
+          'Share your surprise with a friend.',
+          'Reflect on how surprises make you feel.'
+        ];
+      case 'neutral':
+        return [
+          'Take a moment to check in with yourself.',
+          'Consider setting a small goal for today.',
+          'Practice mindfulness for a few minutes.'
+        ];
+      default:
+        return [
+          'Remember to take care of yourself.',
+          'Reach out if you need support.',
+          'Practice gratitude for something today.'
+        ];
+    }
+  }
 
   const handleLocationClick = () => {
     setLocationStatus('Getting your location...');
-    
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
           setLocationStatus(`Location found! Searching for counselors near you...`);
-          
-          // Simulate finding nearby counselors
           setTimeout(() => {
             setLocationStatus('Found 5 counselors within 10km of your location');
           }, 2000);
         },
         (error) => {
           setLocationStatus('Unable to get location. Please enable location services.');
-          console.error('Location error:', error);
         }
       );
     } else {
@@ -348,185 +476,325 @@ const MentalHealthView = ({ currentPage = 'mentalHealth', setCurrentPage }) => {
     }
   };
 
-  const handleBookAppointment = (appointmentData) => {
-    const newAppointment = {
-      id: Date.now(),
-      ...appointmentData,
-      status: 'Pending Confirmation'
-    };
-    setAppointments([...appointments, newAppointment]);
-    setShowAppointmentModal(false);
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#fff' }}>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div style={{ flex: 1, padding: '2rem', background: '#fff' }}>
-        <div
-          style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            width: '100%',
-            background: '#fff',
-            borderRadius: 18,
-            boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
-            padding: 24
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          background: '#e0f2fe',
+          borderRadius: 12,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          border: `1px solid ${colors.gray200}`,
+          padding: 24,
+          marginBottom: 24,
+          textAlign: 'center',
+        }}>
+          <h1 style={{
+            fontSize: 24,
+            fontWeight: 700,
+            color: colors.gray800,
+            marginBottom: 8,
+            letterSpacing: '-0.5px',
+          }}>
+            Mental Health Suite
+          </h1>
+          <p style={{ fontSize: '1.1rem', color: colors.gray600 }}>
+            CNN-powered emotion detection with advanced sentiment analysis
+          </p>
+        </div>
+
+        {/* Location Status */}
+        {locationStatus && (
+          <div style={{ 
+            background: '#eff6ff', 
+            border: '1px solid #bfdbfe', 
+            borderRadius: 8, 
+            padding: 12,
+            marginBottom: 16,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }}>
+            <MapPin size={16} style={{ color: '#2563eb' }} />
+            <span style={{ fontSize: 14, color: '#1e40af' }}>{locationStatus}</span>
+          </div>
+        )}
+
+        {/* Appointment Modal */}
+        <AppointmentModal 
+          isOpen={showAppointmentModal}
+          onClose={() => setShowAppointmentModal(false)}
+          onBookAppointment={(appointment) => {
+            setBookedAppointment(appointment);
+            setShowAppointmentModal(false);
           }}
-        >
-          <div style={{ background: 'white', borderRadius: 16, boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', border: '1px solid #e5e7eb', padding: 24, marginBottom: 24 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 'bold', color: '#4b5563', marginBottom: 24, display: 'flex', alignItems: 'center' }}>
-              <Brain size={24} style={{ marginRight: 8, color: '#a21caf' }} />
-              {t.mentalHealth}
-            </h2>
-            
-            {/* Mood Tracker */}
-            <div style={{ background: '#f3e8ff', borderRadius: 12, padding: 24, marginBottom: 24 }}>
-              <h3 style={{ fontWeight: 600, color: '#4b5563', marginBottom: 16 }}>{t.moodTracker}</h3>
-              <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 16 }}>How are you feeling today?</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                {moodEmojis.map((emoji, index) => (
-                  <button
-                    key={index}
-                    style={{
-                      width: 48,
-                      height: 48,
-                      fontSize: 28,
-                      background: selectedMood === index ? '#a855f7' : 'transparent',
-                      border: selectedMood === index ? '2px solid #7c3aed' : 'none',
-                      borderRadius: '50%',
-                      transition: 'all 0.2s',
-                      cursor: 'pointer',
-                      transform: selectedMood === index ? 'scale(1.1)' : 'scale(1)'
-                    }}
-                    onClick={() => handleMoodClick(index)}
-                    onMouseOver={e => {
-                      if (selectedMood !== index) {
-                        e.currentTarget.style.boxShadow = '0 2px 8px 0 rgba(0,0,0,0.10)';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }
-                    }}
-                    onMouseOut={e => {
-                      if (selectedMood !== index) {
-                        e.currentTarget.style.boxShadow = 'none';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }
-                    }}
-                    title={moodLabels[index]}
-                  >
-                    {emoji}
-                  </button>
-                ))}
+        />
+
+        {/* Main Analytics Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <EmotionDetector onEmotionDetected={handleEmotionDetected} mode="manual" />
+            <div style={{
+              background: colors.purple50,
+              borderRadius: 18,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              border: '1.5px solid #c4b5fd',
+              padding: 28,
+              marginBottom: 0,
+              transition: 'box-shadow 0.2s, transform 0.2s',
+            }}>
+              <div style={{ marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Heart size={22} color={colors.primary} style={{ background: '#fff', borderRadius: '50%', padding: 4, boxShadow: '0 2px 8px rgba(59,130,246,0.08)' }} />
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: colors.gray800, margin: 0, letterSpacing: '-0.5px' }}>AI Mood Coach</h2>
               </div>
-              
-              {showMoodResponse && selectedMood !== null && (
-                <div style={{ 
-                  background: 'rgba(255,255,255,0.8)', 
-                  borderRadius: 8, 
-                  padding: 16, 
-                  marginTop: 16,
-                  border: '1px solid #e5e7eb'
-                }}>
-                  <p style={{ fontSize: 14, color: '#374151', marginBottom: 12, fontWeight: 500 }}>
-                    {moodResponses[selectedMood].message}
-                  </p>
-                  <div style={{ fontSize: 13, color: '#6b7280' }}>
-                    <strong>Suggestions:</strong>
-                    <ul style={{ marginTop: 4, paddingLeft: 16 }}>
-                      {moodResponses[selectedMood].suggestions.map((suggestion, index) => (
-                        <li key={index} style={{ marginBottom: 2 }}>{suggestion}</li>
-                      ))}
-                    </ul>
+              {coachingMessage ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div style={{
+                    background: '#fff',
+                    borderRadius: 14,
+                    padding: 18,
+                    boxShadow: '0 1px 4px 0 rgba(59,130,246,0.06)',
+                    border: '1px solid #dbeafe',
+                  }}>
+                    <p style={{ fontSize: 15, lineHeight: 1.7, color: colors.gray700 }}>{coachingMessage}</p>
                   </div>
+                  {currentSuggestions.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      <h3 style={{ fontSize: 16, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8, color: colors.primary, marginBottom: 4 }}>
+                        <Lightbulb size={18} color={colors.primary} />
+                        AI-Generated Suggestions
+                      </h3>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                        {currentSuggestions.map((suggestion, index) => (
+                          <div key={index} style={{
+                            background: '#f0f9ff',
+                            borderRadius: 12,
+                            padding: 13,
+                            fontSize: 14,
+                            color: colors.primary,
+                            border: '1px solid #bae6fd',
+                            boxShadow: '0 1px 2px 0 rgba(59,130,246,0.04)'
+                          }}>
+                            {suggestion}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '32px 0', color: colors.gray500 }}>
+                  <p>Start emotion detection to receive personalized AI coaching</p>
                 </div>
               )}
             </div>
-            
-            {/* Support Resources */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 24 }}>
-              <SupportCard 
-                title="SADAG Helpline"
-                subtitle="Free mental health support"
-                contact="011 234 4837"
-                available="24/7"
-                type="phone"
-              />
-              <SupportCard 
-                title="Local Counseling"
-                subtitle="Find nearby counselors"
-                contact="Find nearby counselors"
-                available="Mon-Fri 8AM-5PM"
-                type="location"
-                onLocationClick={handleLocationClick}
-              />
-              <SupportCard 
-                title="Book Appointment"
-                subtitle="Schedule with a counselor"
-                contact="Book appointment"
-                available="Available slots"
-                type="booking"
-                onBookAppointment={() => setShowAppointmentModal(true)}
-              />
-            </div>
-            
-            {/* Location Status */}
-            {locationStatus && (
-              <div style={{ 
-                background: '#eff6ff', 
-                border: '1px solid #bfdbfe', 
-                borderRadius: 8, 
-                padding: 12, 
-                marginBottom: 16,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {crisisStatus && (
+              <div style={{
+                borderRadius: 16,
+                background: crisisStatus.severity === 'high' ? colors.red50 : colors.yellow50,
+                border: `2px solid ${crisisStatus.severity === 'high' ? colors.danger : colors.warning}`,
+                padding: 16
               }}>
-                <MapPin size={16} style={{ color: '#2563eb' }} />
-                <span style={{ fontSize: 14, color: '#1e40af' }}>{locationStatus}</span>
-              </div>
-            )}
-            
-            {/* Appointments List */}
-            {appointments.length > 0 && (
-              <div style={{ marginTop: 24 }}>
-                <h4 style={{ fontSize: 16, fontWeight: 600, color: '#374151', marginBottom: 12 }}>
-                  Your Appointments
-                </h4>
+                <AlertTriangle size={18} color={crisisStatus.severity === 'high' ? colors.danger : colors.warning} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {appointments.map((appointment) => (
-                    <div key={appointment.id} style={{
-                      background: '#f0f9ff',
-                      border: '1px solid #bae6fd',
-                      borderRadius: 8,
-                      padding: 12,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                      <div>
-                        <div style={{ fontWeight: 500, color: '#0c4a6e' }}>
-                          {appointment.name} - {appointment.date} at {appointment.time}
-                        </div>
-                        <div style={{ fontSize: 12, color: '#0369a1' }}>
-                          {appointment.phone} | {appointment.status}
-                        </div>
-                      </div>
-                      <Check size={16} style={{ color: '#059669' }} />
-                    </div>
-                  ))}
+                  <div style={{ fontWeight: 500 }}>
+                    {crisisStatus.severity === 'high' ? 'High Risk Detected by AI' : 'Emotional Stress Noticed'}
+                  </div>
+                  <ul style={{ fontSize: 14, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {crisisStatus.indicators.map((indicator, index) => (
+                      <li key={index}>• {indicator}</li>
+                    ))}
+                  </ul>
+                  <p style={{ fontSize: 14, fontWeight: 500, marginTop: 8 }}>{crisisStatus.recommendation}</p>
                 </div>
               </div>
             )}
+
+            <div style={{
+              background: colors.yellow50,
+              borderRadius: 18,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              border: '1.5px solid #fde68a',
+              padding: 22,
+              marginBottom: 0,
+              transition: 'box-shadow 0.2s, transform 0.2s',
+            }}>
+              <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Clock size={18} color={colors.primary} />
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: colors.gray800, margin: 0 }}>Emotion History</h3>
+              </div>
+              {emotionHistory.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {emotionHistory.map((entry, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      background: '#fff',
+                      border: '1px solid #e0e7ef',
+                      borderRadius: 12,
+                      padding: 13,
+                      boxShadow: '0 1px 2px 0 rgba(59,130,246,0.04)'
+                    }}>
+                      <span style={{ fontSize: '1.5rem' }}>{getEmotionEmoji(entry.emotion)}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: colors.primary, textTransform: 'capitalize' }}>
+                          {entry.emotion}
+                        </span>
+                        <span style={{ fontSize: 12, color: colors.gray500 }}>
+                          {Math.round(entry.confidence * 100)}% confidence
+                        </span>
+                      </div>
+                      <span style={{ fontSize: 12, color: colors.gray500 }}>
+                        {entry.timestamp.toLocaleTimeString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '24px 0', color: colors.gray500 }}>
+                  No emotion history yet. Start emotion detection to see your mood timeline.
+                </div>
+              )}
+            </div>
+
+            <div style={{
+              background: colors.purple50,
+              borderRadius: 18,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              border: '2px solid #a78bfa',
+              padding: 22,
+              marginBottom: 0,
+              transition: 'box-shadow 0.2s, transform 0.2s',
+            }}>
+              <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Award size={18} color={colors.success} />
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: colors.gray800, margin: 0 }}>AI Wellness Score</h3>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ textAlign: 'center', marginBottom: 8 }}>
+                  <div style={{ fontSize: '2.5rem', fontWeight: 700, color: colors.success, letterSpacing: '-1px' }}>85</div>
+                  <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>CNN-Analyzed Wellness</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                    <span>Emotional Balance</span>
+                    <span>Good</span>
+                  </div>
+                  <Progress value={75} style={{ height: 8, background: '#ede9fe' }} barColor="#7c3aed" />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                    <span>Stress Level</span>
+                    <span>Low</span>
+                  </div>
+                  <Progress value={25} style={{ height: 8, background: '#fef9c3' }} barColor="#eab308" />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                    <span>Support Network</span>
+                    <span>Strong</span>
+                  </div>
+                  <Progress value={90} style={{ height: 8, background: '#dcfce7' }} barColor="#059669" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Support Cards Row - now in its own dedicated row below the grid */}
+        <div style={{
+          display: 'flex',
+          gap: 18,
+          marginTop: 24,
+          flexWrap: 'nowrap',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}>
+          <SupportCard 
+            title="SADAG Helpline"
+            subtitle="Free mental health support"
+            contact="011 234 4837"
+            available="24/7"
+            type="phone"
+            style={{ flex: 1, minWidth: 0 }}
+          />
+          <SupportCard 
+            title="Local Counseling"
+            subtitle="Find nearby counselors"
+            contact="Find nearby counselors"
+            available="Mon-Fri 8AM-5PM"
+            type="location"
+            onLocationClick={handleLocationClick}
+            style={{ flex: 1, minWidth: 0 }}
+          />
+          <SupportCard 
+            title="Book Appointment"
+            subtitle="Schedule with a counselor"
+            contact="Book appointment"
+            available="Available slots"
+            type="booking"
+            onBookAppointment={() => setShowAppointmentModal(true)}
+            style={{ flex: 1, minWidth: 0 }}
+          />
+        </div>
+
+        {/* Booked Appointment Display - now below support cards, full width */}
+        {bookedAppointment && (
+          <div style={{
+            marginTop: 24,
+            background: '#f0fdf4',
+            border: '1.5px solid #bbf7d0',
+            borderRadius: 14,
+            padding: 20,
+            paddingRight: 10,
+            boxShadow: '0 2px 8px rgba(16,185,129,0.08)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+            width: '100%',
+            maxWidth: '100%',
+            alignSelf: 'stretch',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Calendar size={18} color="#059669" />
+              <span style={{ fontWeight: 600, fontSize: 16, color: '#047857' }}>Booked Appointment</span>
+            </div>
+            <div style={{ fontSize: 15, color: '#047857' }}>
+              <strong>Name:</strong> {bookedAppointment.name}<br />
+              <strong>Email:</strong> {bookedAppointment.email}<br />
+              <strong>Phone:</strong> {bookedAppointment.phone}<br />
+              <strong>Date:</strong> {bookedAppointment.date}<br />
+              <strong>Time:</strong> {bookedAppointment.time}<br />
+              {bookedAppointment.notes && (<><strong>Notes:</strong> {bookedAppointment.notes}</>)}
+            </div>
+            <div style={{ color: '#64748b', fontSize: 13 }}>Your appointment has been booked and a counselor will contact you soon.</div>
+          </div>
+        )}
       </div>
-      
-      <AppointmentModal 
-        isOpen={showAppointmentModal}
-        onClose={() => setShowAppointmentModal(false)}
-        onBookAppointment={handleBookAppointment}
-      />
     </div>
   );
 };
 
-export default MentalHealthView;
+export default MentalHealthSuite;

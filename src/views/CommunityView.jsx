@@ -140,31 +140,59 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: '#f9fafb' }}>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <div style={{ flex: 1, padding: '2rem 2.5vw', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '2rem 2.5vw',
+          maxWidth: 1200,
+          margin: '0 auto',
+          width: '100%',
+          background: '#fff',
+          borderRadius: 18,
+          boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+          transition: 'box-shadow 0.2s, transform 0.2s',
+          position: 'relative',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(59,130,246,0.12)';
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+          e.currentTarget.style.transform = 'none';
+        }}
+      >
         {/* Header */}
         <div style={{
-          background: 'linear-gradient(135deg, #3b82f6 0%, #a78bfa 100%)',
-          color: 'white',
-          padding: 32,
-          borderRadius: 24,
-          marginBottom: 32,
-          fontFamily: 'inherit',
-          boxShadow: '0 2px 12px 0 rgba(59,130,246,0.07)'
+          background: '#e0f2fe', // light blue
+          borderRadius: 32,
+          padding: '2rem',
+          marginBottom: '2rem',
+          color: '#1e293b',
+          position: 'relative',
+          overflow: 'visible',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+          border: '1.5px solid #d1d5db', // subtle black/gray
+          fontFamily: 'inherit'
         }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, letterSpacing: '-1px', fontFamily: 'inherit' }}>
-            Community Hub
-          </h1>
-          <p style={{ fontSize: '1.1rem', opacity: 0.95, marginBottom: 16, fontFamily: 'inherit' }}>
-            Connect, share, and grow together on your health journey
-          </p>
-          <div style={{ display: 'flex', gap: '2rem', fontSize: '1rem', fontFamily: 'inherit' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Users size={20} />
-              <span style={{ fontWeight: 600 }}>2,450 Active Members</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, marginBottom: '0.5rem', color: '#1e293b', fontFamily: 'inherit' }}>
+                Community Hub
+              </h1>
+              <p style={{ fontSize: '1.1rem', opacity: 0.9, margin: 0, marginBottom: '1.5rem', color: '#1e293b', fontFamily: 'inherit' }}>
+                Connect, share, and grow together on your health journey
+              </p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <TrendingUp size={20} />
-              <span style={{ fontWeight: 600 }}>89% Engagement Rate</span>
+            <div style={{ display: 'flex', gap: '2rem', fontSize: '1rem', fontFamily: 'inherit', marginTop: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Users size={20} />
+                <span style={{ fontWeight: 600 }}>2,450 Active Members</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <TrendingUp size={20} />
+                <span style={{ fontWeight: 600 }}>89% Engagement Rate</span>
+              </div>
             </div>
           </div>
         </div>
@@ -189,8 +217,8 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   flex: 1,
-                  background: activeTab === tab.id ? 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
-                  color: activeTab === tab.id ? 'white' : '#64748b',
+                  background: activeTab === tab.id ? '#e0f2fe' : 'transparent', // light blue
+                  color: activeTab === tab.id ? '#111827' : '#64748b',
                   border: 'none',
                   borderRadius: 12,
                   padding: '1rem',
@@ -266,8 +294,8 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                     <button
                       onClick={() => setShowNewPost(!showNewPost)}
                       style={{
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                        color: 'white',
+                        background: '#e0f2fe', // light blue
+                        color: '#111827',
                         border: 'none',
                         borderRadius: 12,
                         padding: '12px 20px',
@@ -288,7 +316,23 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                 </div>
 
                 {showNewPost && (
-                  <div style={{ marginTop: '1rem', padding: '1rem', background: '#fff', borderRadius: 12, fontFamily: 'inherit' }}>
+                  <div
+                    style={{
+                      marginTop: '1rem',
+                      padding: '1rem',
+                      background: '#fff',
+                      borderRadius: 12,
+                      fontFamily: 'inherit',
+                      position: 'relative',
+                      zIndex: 10,
+                      boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
+                      border: '1.5px solid #d1d5db',
+                      minWidth: 280,
+                      maxWidth: 600,
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
                     <textarea
                       placeholder="Share your health journey, tips, or ask questions..."
                       value={newPostContent}
@@ -302,7 +346,10 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                         fontSize: '0.95rem',
                         outline: 'none',
                         resize: 'vertical',
-                        fontFamily: 'inherit'
+                        fontFamily: 'inherit',
+                        background: '#f9fafb',
+                        boxSizing: 'border-box',
+                        marginBottom: '0.5rem',
                       }}
                     />
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
@@ -323,7 +370,7 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                       <button
                         onClick={handleNewPost}
                         style={{
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          background: '#667eea',
                           color: 'white',
                           border: 'none',
                           borderRadius: 8,
@@ -484,10 +531,10 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
 
               {/* Community Stats */}
               <div style={{
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                background: '#d1fae5', // light green
                 borderRadius: 16,
                 padding: '1.5rem',
-                color: 'white',
+                color: '#065f46',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                 fontFamily: 'inherit'
               }}>
@@ -601,7 +648,7 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                       <span>{event.attendees} attending</span>
                     </div>
                     <button onClick={() => handleJoinEvent(event.title)} style={{
-                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      background: '#059669', // solid green
                       color: 'white',
                       border: 'none',
                       borderRadius: 12,
@@ -686,8 +733,8 @@ const CommunityView = ({ setCurrentPage, currentPage = 'community' }) => {
                     <span>{group.members.toLocaleString()} members</span>
                   </div>
                   <button onClick={() => handleGroupAction(group, group.active)} style={{
-                    background: group.active ? '#10b981' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    color: 'white',
+                background: group.active ? '#10b981' : '#667eea', // solid green or purple
+                color: 'white',
                     border: 'none',
                     borderRadius: 12,
                     padding: '10px',
