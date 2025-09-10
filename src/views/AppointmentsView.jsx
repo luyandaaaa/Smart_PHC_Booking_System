@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Video, MapPin, User, Phone, Star, Filter, Search, Plus, CheckCircle, AlertCircle, Users, Stethoscope } from 'lucide-react';
+import { Calendar, Clock, Video, MapPin, User, Phone, Star, Filter, Search, Plus, CheckCircle, AlertCircle, Users, Stethoscope, CreditCard } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
 // Mock components (you can replace these with your actual components)
@@ -173,6 +173,119 @@ const AppointmentCard = ({ appointment, t }) => (
   </div>
 );
 
+// Price configuration based on specialty
+const PRICE_CONFIG = {
+  'General Practice': 250,
+  'Cardiology': 450,
+  'Dermatology': 350,
+  'Endocrinology': 400,
+  'Gastroenterology': 400,
+  'Neurology': 500,
+  'Oncology': 500,
+  'Orthopedics': 450,
+  'Pediatrics': 300,
+  'Psychiatry': 400,
+  'Pulmonology': 400,
+  'Urology': 450,
+  'default': 300
+};
+
+// MoMo Payment Modal Component
+const MomoPaymentModal = ({ isOpen, onClose, appointmentData, onPaymentSuccess }) => {
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setIsProcessing(true);
+    const pay = async () => {
+      try {
+        const response = await initiateMomoPayment();
+        if (response.success) {
+          setPaymentStatus('success');
+          setTimeout(() => {
+            onPaymentSuccess();
+            onClose();
+          }, 2000);
+        } else {
+          setPaymentStatus('failed');
+        }
+      } catch (error) {
+        setPaymentStatus('failed');
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+    pay();
+  }, [isOpen, onClose, onPaymentSuccess]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      padding: 20
+    }}>
+      <div style={{
+        background: 'white',
+        borderRadius: 16,
+        maxWidth: 400,
+        width: '100%',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.15)'
+      }}>
+        <div style={{ padding: 32, textAlign: 'center' }}>
+          {isProcessing && (
+            <>
+              <CreditCard size={48} style={{ color: '#8a2be2', marginBottom: 16 }} />
+              <h3 style={{ color: '#8a2be2', marginBottom: 8 }}>Processing Payment...</h3>
+              <p>Please wait while we process your MoMo payment.</p>
+            </>
+          )}
+          {paymentStatus === 'success' && (
+            <>
+              <CheckCircle size={48} style={{ color: '#22c55e', marginBottom: 16 }} />
+              <h3 style={{ color: '#22c55e', marginBottom: 8 }}>Payment Successful!</h3>
+              <p>Your appointment has been confirmed.</p>
+            </>
+          )}
+          {paymentStatus === 'failed' && (
+            <>
+              <AlertCircle size={48} style={{ color: '#ef4444', marginBottom: 16 }} />
+              <h3 style={{ color: '#ef4444', marginBottom: 8 }}>Payment Failed or Cancelled</h3>
+              <p>Payment was not completed. Please try again or use another payment method.</p>
+              <button
+                onClick={onClose}
+                style={{
+                  background: '#8a2be2',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '12px 24px',
+                  marginTop: 16,
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
   const [formData, setFormData] = useState({
     specialty: '',
@@ -185,6 +298,8 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
     preferredLanguage: 'English',
     notes: ''
   });
+
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const specialties = [
     'General Practice', 'Cardiology', 'Dermatology', 'Endocrinology',
@@ -220,6 +335,12 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Show payment modal instead of directly submitting
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    // Payment was successful, now submit the booking
     onSubmit({ ...formData, clinic: clinic.name });
     onClose();
   };
@@ -228,15 +349,6 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
 
   return (
     <>
-      <style>
-        {`
-          @media (max-width: 600px) {
-            .booking-additional-info-grid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}
-      </style>
       <div style={{
         position: 'fixed',
         top: 0,
@@ -417,6 +529,28 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
               </div>
             </div>
 
+            {/* Price Preview */}
+            {formData.specialty && (
+              <div style={{
+                background: '#f0fdf4',
+                border: '1px solid #bbf7d0',
+                borderRadius: 8,
+                padding: 16,
+                marginBottom: 20
+              }}>
+                <h4 style={{ marginBottom: 8, color: '#166534' }}>Payment Information</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Consultation Fee:</span>
+                  <span style={{ fontWeight: 'bold' }}>
+                    R {(PRICE_CONFIG[formData.specialty] || PRICE_CONFIG.default).toFixed(2)}
+                  </span>
+                </div>
+                <p style={{ fontSize: 14, color: '#6b7280', marginTop: 8 }}>
+                  Payment is required to confirm your appointment. You'll be redirected to MoMo to complete payment.
+                </p>
+              </div>
+            )}
+
             {/* Urgency Level */}
             <div style={{ marginBottom: 20 }}>
               <label style={{ display: 'block', fontWeight: 600, marginBottom: 12, color: '#374151' }}>
@@ -541,25 +675,76 @@ const BookingModal = ({ isOpen, onClose, clinic, onSubmit }) => {
               </button>
               <button
                 type="submit"
+                disabled={!formData.specialty}
                 style={{
                   padding: '12px 24px',
                   border: 'none',
                   borderRadius: 8,
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  background: formData.specialty ? 'linear-gradient(135deg, #8a2be2, #6a0dad)' : '#cbd5e1',
                   color: 'white',
                   fontSize: 14,
                   fontWeight: 500,
-                  cursor: 'pointer'
+                  cursor: formData.specialty ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8
                 }}
               >
-                Book Appointment
+                <CreditCard size={16} />
+                Pay with MoMo
               </button>
             </div>
           </form>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <MomoPaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        appointmentData={formData}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
     </>
   );
+};
+
+// Mock function to simulate MoMo payment initiation
+const initiateMomoPayment = async (paymentDetails) => {
+  const BACKEND_URL = 'http://localhost:5000/api/requesttopay'; // If you change backend port, update here
+  const SUBSCRIPTION_KEY = '01c62724f8424c02a198881a580fb635';
+  const AUTH_TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSMjU2In0.eyJjbGllbnRJZCI6ImM2YWE5NzM4LTdlNmItNGRlNS1hZDhjLTk0N2ZiZGVlMDMyZiIsImV4cGlyZXMiOiIyMDI1LTA5LTEwVDIwOjQ2OjA5LjU0NCIsInNlc3Npb25JZCI6IjQ5ZmY1MDdjLTQzZTktNDhiZC1hYzdjLWIzMzk2YTVlZmU3OSJ9.dzn_aG-n4K0DHw_DOrn9hdfu5TJODSK3c_1ggC3g9Mk8hcu8kwpHKZ2w4vmwPeOwgbAs509GSs2PNp25y53NZnOMpBklDsdNGb2FyacniUEb5mWsyXKc1Eez1PkjqHoxsAuCPwnoliZhKThRaA4Lfo2647d1aZ2MzZV9Q0P3LPfT23tiAhHmFoHEyZdqy6Gxu7CQkXfpdkzi2dRyifn6zyKB0-TU-7pgYslVWny-9lM3XRps4Rr9jlJp7oa3eBSsdhl95gcH_Dg7wO_hIdR0N_nlCBnInvGAwHUgX2msGbs6fAMTE7oDfJq-ZkKYe_GnTg6PUqI-RB95OaY9CGJEUQ';
+  const X_REFERENCE_ID = '6b27b8fe-f8d1-496b-93cb-4abfac41316c';
+  const X_TARGET_ENV = 'mtnsouthafrica';
+
+  const payload = {
+    amount: "1.00",
+    currency: "ZAR",
+    externalId: "test",
+    payer: {
+      partyIdType: "MSISDN",
+      partyId: "27605011274"
+    },
+    payerMessage: "test",
+    payeeNote: "test"
+  };
+
+  try {
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      return { success: true, transactionId: 'MOMO' + Date.now() };
+    } else {
+      return { success: false };
+    }
+  } catch (error) {
+    return { success: false };
+  }
 };
 
 const defaultT = {
@@ -640,7 +825,7 @@ const AppointmentsView = ({ t = defaultT, setCurrentPage, currentPage = 'appoint
         day: 'numeric' 
       }),
       time: bookingData.time,
-      status: 'pending',
+      status: 'confirmed', // Now confirmed after payment
       doctor: 'Dr. TBD',
       specialty: bookingData.specialty,
     };
