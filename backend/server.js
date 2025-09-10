@@ -1,6 +1,7 @@
 const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -12,8 +13,8 @@ app.get('/', (req, res) => {
 app.post('/api/requesttopay', async (req, res) => {
   const MOMO_API_URL = 'https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay';
   const SUBSCRIPTION_KEY = '01c62724f8424c02a198881a580fb635';
-  const AUTH_TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSMjU2In0.eyJjbGllbnRJZCI6ImM2YWE5NzM4LTdlNmItNGRlNS1hZDhjLTk0N2ZiZGVlMDMyZiIsImV4cGlyZXMiOiIyMDI1LTA5LTEwVDIzOjIxOjM2Ljg1NiIsInNlc3Npb25JZCI6IjQ1NWMxYTBkLWMwYzktNDQyZi04NzJhLTQ4ODZiOWFlZmEyYiJ9.YHFnjU8oHyC7s3nvMnK27subBWRV1nf3WcvtHjzbGEAV2SosDcWHtrpSprKGZF-IdW46jpHOFF-t6AN2-cHAkaOLRl2isMolaid6vc90T2J1_YBl5taIiZRTENAI8SY95uQ-7G0myB2w1Hq-zUO_v--Cl8Xf3woAIfBJIpsQ3SXPjzqr5SFq9EcqpzLRA2NANXeJNF8hTXWQTgR6PMUioaf6bWbwl_HfszaUOKZqeEOEEGXM2vt1AfQKJmsu4m_1O1iIs7SF0DdDjMXHr4Y2w5OvliYIHdTvX1uw0oUtfkL_ZAEh5wBl-llIzFWJmsd0RPamW8dRMtAAQBO0GcO2fw';
-  const X_REFERENCE_ID = '2a5bc770-b22a-4e75-9036-557d1ff3c2a7';
+  const AUTH_TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSMjU2In0.eyJjbGllbnRJZCI6ImM2YWE5NzM4LTdlNmItNGRlNS1hZDhjLTk0N2ZiZGVlMDMyZiIsImV4cGlyZXMiOiIyMDI1LTA5LTExVDAwOjQxOjExLjI4NyIsInNlc3Npb25JZCI6IjUwZmY4OWI1LTUzNmItNGUzMC1iMzhkLTVkMDY3YmU1NGJjYSJ9.clsbC99Vkm5snqdbVQmzALxaU_CfNgd591-YpGe0phORigLVcHOwdoy0xp4L9AjQQDUbx0yjVaHe5mbJ600cjjlN68wdPX8HgcoGAr5i4ZUcsjkHj0VUVj0rRr0ByucSF3Ypef35yc9VZzGYjGlZk8BY1xr0X9XjGSLXhfgl0ud_U6rPo07sG9_XUQNPoFSjADkIQByVrnb3VlW5l0TdPiTB5Rd5KeM5F_gLWHwHySnwo4SyPpo6YyG9GK70WARiN_QPE0hxTv3C9TWUt36tbeI0qcAzzpkjVj40h1hpQ3zEkhxQInh5DG2h2t4rJYML0yWEfrmQRX--zcUnC15A-w';
+  const X_REFERENCE_ID = uuidv4();
   const X_TARGET_ENV = 'mtnsouthafrica';
 
   try {
