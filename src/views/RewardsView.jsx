@@ -12,7 +12,7 @@ const unifiedGames = [
     description: 'Multiple choice questions about health topics. Questions cover water intake, vitamins, first aid.',
     difficulty: 'Easy',
     timeLimit: 60,
-    telkomReward: { type: 'airtime', amount: 'R10' }
+    momoReward: { type: 'airtime', amount: 'R10' }
   },
   {
     id: 'medicine-match',
@@ -21,7 +21,7 @@ const unifiedGames = [
     description: 'Match medicines with their purposes. Learn about Paracetamol, Aspirin, etc.',
     difficulty: 'Medium',
     timeLimit: 90,
-    telkomReward: { type: 'data', amount: '100MB' }
+    momoReward: { type: 'data', amount: '100MB' }
   },
   {
     id: 'symptom-detective',
@@ -30,7 +30,7 @@ const unifiedGames = [
     description: 'Identify symptoms and their causes. Advanced diagnostic challenges.',
     difficulty: 'Hard',
     timeLimit: 120,
-    telkomReward: { type: 'data', amount: '500MB' }
+    momoReward: { type: 'data', amount: '500MB' }
   },
   {
     id: 'daily-fitness',
@@ -39,7 +39,7 @@ const unifiedGames = [
     description: 'Complete simple exercises. Physical activity integration.',
     difficulty: 'Easy',
     timeLimit: 300,
-    telkomReward: { type: 'minutes', amount: '30 mins' }
+    momoReward: { type: 'minutes', amount: '30 mins' }
   },
   {
     id: 'nutrition-puzzle',
@@ -48,7 +48,7 @@ const unifiedGames = [
     description: 'Build balanced meals. Learn about healthy eating.',
     difficulty: 'Medium',
     timeLimit: 100,
-    telkomReward: { type: 'airtime', amount: 'R20' }
+    momoReward: { type: 'airtime', amount: 'R20' }
   },
   {
     id: 'first-aid-sim',
@@ -57,12 +57,12 @@ const unifiedGames = [
     description: 'Practice emergency response steps. Critical emergency skills.',
     difficulty: 'Hard',
     timeLimit: 180,
-    telkomReward: { type: 'premium', amount: 'Telkom Premium Bundle' }
+    momoReward: { type: 'premium', amount: 'MoMo Premium Bundle' }
   }
 ];
 
-// Telkom reward badges based on health achievements
-const telkomBadges = [
+// MoMo reward badges based on health achievements
+const momoBadges = [
   {
     id: 1,
     name: 'Data Champion',
@@ -92,7 +92,7 @@ const telkomBadges = [
   },
   {
     id: 4,
-    name: 'Telkom Health Pro',
+    name: 'MoMo Health Pro',
     icon: '🏆',
     description: 'Earn 1000+ health points',
     requirement: 1000,
@@ -258,7 +258,7 @@ const RewardsView = ({
   const [completedGames, setCompletedGames] = useState([]);
   const [gamesPlayed, setGamesPlayed] = useState(0);
   const [earnedRewards, setEarnedRewards] = useState([]);
-  const [telkomBalance, setTelkomBalance] = useState({
+  const [momoBalance, setMomoBalance] = useState({
     airtime: 0,
     data: 0,
     minutes: 0,
@@ -266,11 +266,11 @@ const RewardsView = ({
   });
   
   const [leaderboard, setLeaderboard] = useState([
-    { rank: 1, name: 'Thabo M.', points: 1250, avatar: '🏆', telkomRewards: 'R85 + 2GB' },
-    { rank: 2, name: 'Nomsa K.', points: 1180, avatar: '🥈', telkomRewards: 'R60 + 1.5GB' },
-    { rank: 3, name: 'You (Sibongile)', points: 850, avatar: '🥉', isCurrentUser: true, telkomRewards: 'R30 + 600MB' },
-    { rank: 4, name: 'Mandla S.', points: 720, avatar: '👤', telkomRewards: 'R25 + 500MB' },
-    { rank: 5, name: 'Zanele P.', points: 680, avatar: '👤', telkomRewards: 'R20 + 300MB' },
+    { rank: 1, name: 'Thabo M.', points: 1250, avatar: '🏆', momoRewards: 'R85 + 2GB' },
+    { rank: 2, name: 'Nomsa K.', points: 1180, avatar: '🥈', momoRewards: 'R60 + 1.5GB' },
+    { rank: 3, name: 'You (Sibongile)', points: 850, avatar: '🥉', isCurrentUser: true, momoRewards: 'R30 + 600MB' },
+    { rank: 4, name: 'Mandla S.', points: 720, avatar: '👤', momoRewards: 'R25 + 500MB' },
+    { rank: 5, name: 'Zanele P.', points: 680, avatar: '👤', momoRewards: 'R20 + 300MB' },
   ]);
 
   const handleGameComplete = (earnedPoints, gameId) => {
@@ -279,23 +279,23 @@ const RewardsView = ({
     const newPoints = (userPoints || 0) + earnedPoints;
     setUserPoints(newPoints);
 
-    // Calculate Telkom reward increments based on points scored
+    // Calculate MoMo reward increments based on points scored
     let airtimeInc = 0, dataInc = 0, minutesInc = 0, premiumInc = 0;
-    if (game.telkomReward.type === 'airtime') {
+    if (game.momoReward.type === 'airtime') {
       // 1 point = R0.10, rounded down
       airtimeInc = Math.floor(earnedPoints * 0.1);
-    } else if (game.telkomReward.type === 'data') {
+    } else if (game.momoReward.type === 'data') {
       // 1 point = 2MB
       dataInc = earnedPoints * 2;
-    } else if (game.telkomReward.type === 'minutes') {
+    } else if (game.momoReward.type === 'minutes') {
       // 1 point = 1 minute
       minutesInc = earnedPoints;
-    } else if (game.telkomReward.type === 'premium') {
+    } else if (game.momoReward.type === 'premium') {
       // 1 premium per game completion
       premiumInc = 1;
     }
 
-    setTelkomBalance(prev => ({
+    setMomoBalance(prev => ({
       ...prev,
       airtime: prev.airtime + airtimeInc,
       data: prev.data + dataInc,
@@ -303,11 +303,11 @@ const RewardsView = ({
       premiumServices: prev.premiumServices + premiumInc
     }));
 
-    // Add Telkom reward (static, for display)
+    // Add MoMo reward (static, for display)
     const newReward = {
       id: Date.now(),
       gameTitle: game.title,
-      reward: game.telkomReward,
+      reward: game.momoReward,
       earnedAt: new Date(),
       claimed: false
     };
@@ -329,7 +329,7 @@ const RewardsView = ({
   };
 
   const checkBadgeUnlocks = (points, gamesCompleted) => {
-    const updatedBadges = telkomBadges.map(badge => {
+    const updatedBadges = momoBadges.map(badge => {
       if (!badge.unlocked) {
         if (badge.id === 1 && gamesCompleted >= 3) badge.unlocked = true;
         if (badge.id === 2 && points >= 500) badge.unlocked = true;
@@ -345,7 +345,7 @@ const RewardsView = ({
     setLeaderboard(prev => {
       const updated = prev.map(entry =>
         entry.isCurrentUser
-          ? { ...entry, points: newPoints, telkomRewards: calculateTelkomRewards(newPoints) }
+          ? { ...entry, points: newPoints, momoRewards: calculateMomoRewards(newPoints) }
           : entry
       );
       return updated.sort((a, b) => b.points - a.points).map((entry, index) => ({
@@ -358,7 +358,7 @@ const RewardsView = ({
     });
   };
 
-  const calculateTelkomRewards = (points) => {
+  const calculateMomoRewards = (points) => {
     const airtime = Math.floor(points / 20) * 5;
     const data = Math.floor(points / 100) * 100;
     return `R${airtime} + ${data}MB`;
@@ -372,7 +372,7 @@ const RewardsView = ({
     );
   };
 
-  const getTelkomIcon = (type) => {
+  const getMomoIcon = (type) => {
     switch (type) {
       case 'airtime': return <Phone className="w-4 h-4" />;
       case 'data': return <Wifi className="w-4 h-4" />;
@@ -382,7 +382,7 @@ const RewardsView = ({
     }
   };
 
-  const getTelkomColor = (type) => {
+  const getMomoColor = (type) => {
     switch (type) {
       case 'airtime': return '#10b981';
       case 'data': return '#3b82f6';
@@ -409,7 +409,7 @@ const RewardsView = ({
           position: 'relative',
         }}
       >
-        {/* Telkom Rewards Overview */}
+        {/* MoMo Rewards Overview */}
         <div style={{ 
           background: '#e0f2fe',
           color: '#1e293b',
@@ -423,9 +423,9 @@ const RewardsView = ({
             <Award size={32} style={{ marginRight: 12, color: '#f59e0b' }} />
             Health Rewards
           </h2>
-          <p style={{ color: '#374151', opacity: 0.9, marginBottom: 24 }}>Complete health games to earn Telkom airtime, data, minutes & more!</p>
+          <p style={{ color: '#374151', opacity: 0.9, marginBottom: 24 }}>Complete health games to earn MoMo airtime, data, minutes & more!</p>
           
-          {/* Telkom Balance Display */}
+          {/* MoMo Balance Display */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16, marginBottom: 24 }}>
             {/* Mocked stats from leaderboard current user */}
             {/* Mocked stats: 850 health points, R30 airtime, 600MB data, 85 minutes */}
@@ -450,7 +450,7 @@ const RewardsView = ({
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 24, fontWeight: 700 }}>3</div>
-              <div style={{ fontSize: 14, opacity: 0.75 }}>Telkom Badges</div>
+              <div style={{ fontSize: 14, opacity: 0.75 }}>MoMo Badges</div>
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 24, fontWeight: 700 }}>6</div>
@@ -475,22 +475,22 @@ const RewardsView = ({
                   onPlay={() => setCurrentGame(game)} 
                   t={t} 
                   isCompleted={isCompleted}
-                  getTelkomIcon={getTelkomIcon}
-                  getTelkomColor={getTelkomColor}
+                  getMomoIcon={getMomoIcon}
+                  getMomoColor={getMomoColor}
                 />
               );
             })}
           </div>
         </div>
 
-        {/* Telkom Badges Section */}
+        {/* MoMo Badges Section */}
         <div style={{ background: '#e0f2fe', borderRadius: 16, boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)', border: '1px solid #e5e7eb', padding: 24, marginBottom: 24 }}>
           <h3 style={{ fontSize: 22, fontWeight: 600, color: '#1f2937', marginBottom: 24, display: 'flex', alignItems: 'center' }}>
             <Award size={24} style={{ marginRight: 8, color: '#a78bfa' }} />
             Health Badges
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-            {telkomBadges.map((badge, idx) => {
+            {momoBadges.map((badge, idx) => {
               // Unlock first three badges for mock display
               const unlockedBadge = { ...badge, unlocked: idx < 3 };
               return (
@@ -498,8 +498,8 @@ const RewardsView = ({
                   key={badge.id} 
                   badge={unlockedBadge} 
                   t={t} 
-                  getTelkomIcon={getTelkomIcon}
-                  getTelkomColor={getTelkomColor}
+                  getMomoIcon={getMomoIcon}
+                  getMomoColor={getMomoColor}
                 />
               );
             })}
@@ -525,8 +525,8 @@ const RewardsView = ({
                   border: '1px solid #e5e7eb'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ color: getTelkomColor(reward.reward.type) }}>
-                      {getTelkomIcon(reward.reward.type)}
+                    <div style={{ color: getMomoColor(reward.reward.type) }}>
+                      {getMomoIcon(reward.reward.type)}
                     </div>
                     <div>
                       <div style={{ fontWeight: 600, color: '#1e293b' }}>{reward.gameTitle}</div>
@@ -571,7 +571,7 @@ const RewardsView = ({
                 points={entry.points} 
                 avatar={entry.avatar} 
                 isCurrentUser={entry.isCurrentUser} 
-                telkomRewards={entry.telkomRewards}
+                momoRewards={entry.momoRewards}
               />
             ))}
           </div>
@@ -635,19 +635,19 @@ const GameModal = ({ game, onClose, onComplete, challengeQuestions }) => {
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Game Complete!</h3>
           <p className="text-gray-600 mb-4">You earned {score} points!</p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="text-blue-800 font-semibold">Telkom Reward Earned:</div>
+            <div className="text-blue-800 font-semibold">MoMo Reward Earned:</div>
             <div className="text-lg font-bold text-blue-900 mt-1">
-              {game.telkomReward.amount}
+              {game.momoReward.amount}
             </div>
             <div className="text-sm text-blue-700 capitalize">
-              {game.telkomReward.type}
+              {game.momoReward.type}
             </div>
           </div>
           <button
             onClick={onClose}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
           >
-            Collect Telkom Reward
+            Collect MoMo Reward
           </button>
         </div>
       </div>
@@ -720,7 +720,7 @@ const GameModal = ({ game, onClose, onComplete, challengeQuestions }) => {
   );
 };
 
-const TelkomGameCard = ({ game, onPlay, t, isCompleted, getTelkomIcon, getTelkomColor }) => (
+const TelkomGameCard = ({ game, onPlay, t, isCompleted, getMomoIcon, getMomoColor }) => (
   <div 
     style={{ 
       background: '#fff',
@@ -757,7 +757,7 @@ const TelkomGameCard = ({ game, onPlay, t, isCompleted, getTelkomIcon, getTelkom
       <p style={{ fontSize: 14, color: '#64748b', marginBottom: 16 }}>{game.description}</p>
     </div>
     
-    {/* Telkom Reward Display */}
+    {/* MoMo Reward Display */}
     <div style={{ 
       background: '#e0f2fe',
       borderRadius: 12,
@@ -766,15 +766,15 @@ const TelkomGameCard = ({ game, onPlay, t, isCompleted, getTelkomIcon, getTelkom
       border: '1px solid #bae6fd'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-        <div style={{ color: getTelkomColor(game.telkomReward.type) }}>
-          {getTelkomIcon(game.telkomReward.type)}
+        <div style={{ color: getMomoColor(game.momoReward.type) }}>
+          {getMomoIcon(game.momoReward.type)}
         </div>
         <span style={{ fontWeight: 600, color: '#1e293b', fontSize: 15 }}>
-          Win: {game.telkomReward.amount}
+          Win: {game.momoReward.amount}
         </span>
       </div>
       <div style={{ textAlign: 'center', fontSize: 12, color: '#64748b', marginTop: 4, textTransform: 'capitalize' }}>
-        Telkom {game.telkomReward.type}
+        MoMo {game.momoReward.type}
       </div>
     </div>
     
@@ -808,7 +808,7 @@ const TelkomGameCard = ({ game, onPlay, t, isCompleted, getTelkomIcon, getTelkom
       }} 
       disabled={isCompleted}
     >
-      {isCompleted ? 'Completed ✓' : 'Play for Telkom Rewards'}
+      {isCompleted ? 'Completed ✓' : 'Play for MoMo Rewards'}
     </button>
     
     {isCompleted && (
@@ -829,7 +829,7 @@ const TelkomGameCard = ({ game, onPlay, t, isCompleted, getTelkomIcon, getTelkom
   </div>
 );
 
-const TelkomBadgeCard = ({ badge, t, getTelkomIcon, getTelkomColor }) => (
+const TelkomBadgeCard = ({ badge, t, getMomoIcon, getMomoColor }) => (
   <div style={{ 
     textAlign: 'center', 
     padding: 20, 
@@ -861,7 +861,7 @@ const TelkomBadgeCard = ({ badge, t, getTelkomIcon, getTelkomColor }) => (
       {badge.description}
     </p>
     
-    {/* Telkom Reward for Badge */}
+    {/* MoMo Reward for Badge */}
     <div style={{ 
       background: '#f3f4f6',
       borderRadius: 8,
@@ -871,8 +871,8 @@ const TelkomBadgeCard = ({ badge, t, getTelkomIcon, getTelkomColor }) => (
       borderColor: badge.unlocked ? '#e5e7eb' : '#d1d5db'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 4 }}>
-        <div style={{ color: getTelkomColor(badge.reward.type) }}>
-          {getTelkomIcon(badge.reward.type)}
+        <div style={{ color: getMomoColor(badge.reward.type) }}>
+          {getMomoIcon(badge.reward.type)}
         </div>
         <span style={{ 
           fontSize: 14, 
@@ -887,7 +887,7 @@ const TelkomBadgeCard = ({ badge, t, getTelkomIcon, getTelkomColor }) => (
         color: badge.unlocked ? '#64748b' : '#9ca3af',
         textTransform: 'capitalize' 
       }}>
-        Telkom {badge.reward.type}
+        MoMo {badge.reward.type}
       </div>
     </div>
     
@@ -903,7 +903,7 @@ const TelkomBadgeCard = ({ badge, t, getTelkomIcon, getTelkomColor }) => (
   </div>
 );
 
-const TelkomLeaderboardItem = ({ rank, name, points, avatar, isCurrentUser, telkomRewards }) => (
+const TelkomLeaderboardItem = ({ rank, name, points, avatar, isCurrentUser, momoRewards }) => (
   <div style={{ 
     display: 'flex', 
     alignItems: 'center', 
@@ -942,7 +942,7 @@ const TelkomLeaderboardItem = ({ rank, name, points, avatar, isCurrentUser, telk
           {points} health points
         </div>
         <div style={{ fontSize: 13, color: '#059669', fontWeight: 500 }}>
-          Rewards: {telkomRewards}
+          Rewards: {momoRewards}
         </div>
       </div>
     </div>

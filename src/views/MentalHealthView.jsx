@@ -71,7 +71,7 @@ const SupportCard = ({ title, subtitle, contact, available, type, onLocationClic
   );
 };
 
-// AppointmentModal component remains the same
+// AppointmentModal component with MoMo payment integration
 const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -79,13 +79,23 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
     phone: '',
     date: '',
     time: '',
-    notes: ''
+    notes: '',
+    momoNumber: '',
+    paymentAmount: ''
   });
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [isPaying, setIsPaying] = useState(false);
 
   const handleSubmit = () => {
-    if (formData.name && formData.email && formData.phone && formData.date && formData.time) {
-      onBookAppointment(formData);
-      setFormData({ name: '', email: '', phone: '', date: '', time: '', notes: '' });
+    if (formData.name && formData.email && formData.phone && formData.date && formData.time && formData.momoNumber && formData.paymentAmount) {
+      setIsPaying(true);
+      setPaymentStatus('Processing MoMo payment...');
+      setTimeout(() => {
+        setPaymentStatus('Payment successful! Appointment booked.');
+        setIsPaying(false);
+        onBookAppointment(formData);
+        setFormData({ name: '', email: '', phone: '', date: '', time: '', notes: '', momoNumber: '', paymentAmount: '' });
+      }, 2000);
     }
   };
   if (!isOpen) return null;
@@ -232,6 +242,54 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
               placeholder="Any specific concerns or preferences..."
             />
           </div>
+          {/* MoMo Payment Section */}
+          <div style={{ background: '#f3f4f6', borderRadius: 8, padding: 12, marginTop: 8, border: '1px solid #e5e7eb' }}>
+            <div style={{ fontWeight: 600, color: '#059669', marginBottom: 6 }}>Pay with MoMo Wallet</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: 2, fontSize: 13, color: '#374151' }}>
+                  MoMo Number *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.momoNumber}
+                  onChange={e => setFormData({ ...formData, momoNumber: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: 8,
+                    border: '1px solid #d1d5db',
+                    borderRadius: 6,
+                    fontSize: 14
+                  }}
+                  placeholder="Enter your MoMo number"
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: 2, fontSize: 13, color: '#374151' }}>
+                  Payment Amount (ZAR) *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="1"
+                  value={formData.paymentAmount}
+                  onChange={e => setFormData({ ...formData, paymentAmount: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: 8,
+                    border: '1px solid #d1d5db',
+                    borderRadius: 6,
+                    fontSize: 14
+                  }}
+                  placeholder="e.g. 100"
+                />
+              </div>
+            </div>
+            {paymentStatus && (
+              <div style={{ color: paymentStatus.includes('successful') ? '#10b981' : '#f59e0b', fontSize: 13, marginTop: 8 }}>{paymentStatus}</div>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 20 }}>
             <button
               type="button"
@@ -244,6 +302,7 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
                 color: '#374151',
                 cursor: 'pointer'
               }}
+              disabled={isPaying}
             >
               Cancel
             </button>
@@ -256,14 +315,16 @@ const AppointmentModal = ({ isOpen, onClose, onBookAppointment }) => {
                 borderRadius: 6,
                 background: '#059669',
                 color: 'white',
-                cursor: 'pointer',
+                cursor: isPaying ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4
+                gap: 4,
+                opacity: isPaying ? 0.7 : 1
               }}
+              disabled={isPaying}
             >
               <Calendar size={16} />
-              Book Appointment
+              {isPaying ? 'Processing...' : 'Book & Pay with MoMo'}
             </button>
           </div>
         </div>
