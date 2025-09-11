@@ -1,0 +1,497 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Main Container */
+.mobile-banking-app {
+  max-width: 375px;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Landing Page Outer Border */
+.landing-outer-border {
+  border: 4px solid #171716;
+  border-radius: 28px;
+  max-width: 410px;
+  margin: 32px auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  background: #fffbe6;
+  padding: 0;
+}
+
+@media (max-width: 450px) {
+  .landing-outer-border {
+    max-width: 100vw;
+    border-radius: 0;
+    margin: 0;
+  }
+}
+
+/* Header Section */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.header-greeting {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Balance Section */
+.balance-section {
+  background-color: white;
+  padding: 0 24px 24px;
+}
+
+.balance-display {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.balance-amount-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.balance-amount {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+}
+
+.balance-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.balance-toggle-icon {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.transaction-history-btn {
+  background: none;
+  border: none;
+  color: #007AFF;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.transaction-history-btn:hover {
+  text-decoration: underline;
+}
+
+/* Cash In/Out Buttons */
+.cash-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cash-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.cash-button:hover {
+  background-color: #f5f5f5;
+}
+
+.cash-button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Quick Actions Section */
+.quick-actions {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.quick-action:active {
+  transform: scale(0.95);
+}
+
+.quick-action-circle {
+  width: 64px;
+  height: 64px;
+  background-color: #FFD60A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(255, 214, 10, 0.3);
+}
+
+.quick-action-icon {
+  width: 28px;
+  height: 28px;
+  color: #333;
+}
+
+.quick-action-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* Services Section */
+.services-section {
+  padding: 0 24px 96px;
+}
+
+.services-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Service Card */
+.service-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.service-card:active {
+  transform: scale(0.95);
+}
+
+.service-logo {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Service Logo Styles */
+.logo-send-money {
+  width: 32px;
+  height: 32px;
+  background-color: #E3F2FD;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-send-money-icon {
+  width: 16px;
+  height: 16px;
+  color: #1976D2;
+}
+
+.logo-voucher {
+  background-color: #FF6B35;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.logo-hollywood {
+  color: #7B1FA2;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.logo-mtn {
+  width: 32px;
+  height: 32px;
+  background-color: #FFEB3B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-mtn-text {
+  color: #333;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.logo-eskom {
+  color: #1976D2;
+}
+
+.logo-eskom-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.logo-momo-health {
+  color: #F44336;
+}
+
+.logo-momo-health-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Bottom Navigation */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 375px;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  padding: 12px 24px 8px;
+}
+
+.bottom-nav-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px 4px;
+}
+
+.bottom-nav-item.center {
+  position: relative;
+  top: -16px;
+}
+
+.bottom-nav-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.bottom-nav-icon-container.center {
+  width: 64px;
+  height: 64px;
+  background-color: #FFD60A;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(255, 214, 10, 0.3);
+}
+
+.bottom-nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.bottom-nav-icon.active {
+  color: #333;
+}
+
+.bottom-nav-icon.inactive {
+  color: #999;
+}
+
+.bottom-nav-icon.center {
+  width: 32px;
+  height: 32px;
+  color: #333;
+}
+
+.bottom-nav-label {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.bottom-nav-label.active {
+  color: #333;
+  font-weight: 500;
+}
+
+.bottom-nav-label.inactive {
+  color: #999;
+}
+
+.bottom-nav-label.center {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Bottom Home Indicator */
+.home-indicator {
+  width: 128px;
+  height: 4px;
+  background-color: #333;
+  border-radius: 2px;
+  margin: 8px auto 0;
+}
+
+/* Responsive Design */
+@media (max-width: 375px) {
+  .mobile-banking-app {
+    max-width: 100%;
+  }
+  
+  .services-grid {
+    gap: 12px;
+  }
+  
+  .service-card {
+    padding: 12px;
+    min-height: 90px;
+  }
+  
+  .quick-actions {
+    gap: 12px;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scale-up {
+  animation: scaleUp 0.2s ease-out;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Utility Classes */
+.text-bold {
+  font-weight: bold;
+}
+
+.text-medium {
+  font-weight: 500;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+/* Color Variables for Easy Customization */
+:root {
+  --primary-yellow: #FFD60A;
+  --primary-blue: #007AFF;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --background-gray: #f0f0f0;
+  --card-white: #ffffff;
+  --border-light: #e0e0e0;
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.12);
+}

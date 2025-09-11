@@ -16,6 +16,7 @@ import ScanView from './views/ScanView';
 import ProfileView from './views/ProfileView';
 import AnalyticsView from './views/AnalyticsView';
 import GameModal from './components/GameModal';
+import LandingPage from './views/LandingPage';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -31,7 +32,7 @@ const App = () => {
   const [audioQueue, setAudioQueue] = useState([]);
   const [translationMode, setTranslationMode] = useState(false);
   const [medicalTermTranslation, setMedicalTermTranslation] = useState({});
-  const [showHome, setShowHome] = useState(true);
+  const [showLanding, setShowLanding] = useState(true);
 
   const t = translations[currentLanguage];
 
@@ -274,9 +275,9 @@ const App = () => {
     setCurrentGame(null);
   };
 
-  if (showHome) {
-    return <Home onPatientRegister={() => {
-      setShowHome(false);
+  if (showLanding) {
+    return <LandingPage onPatientRegister={() => {
+      setShowLanding(false);
       setCurrentPage('dashboard');
     }} />;
   }
